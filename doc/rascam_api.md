@@ -95,3 +95,8 @@ Ras_Cam.shuttle_button(True)
 ```python
 Ras_Cam.human_detect_switch(True)
 ```
+
+- watermark(flag)
+```python
+Ras_Cam.watermark(True)
+```

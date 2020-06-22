@@ -8,7 +8,7 @@ if __name__ == "__main__":
     try:
 
         Ras_Cam.camera_start()
-
+        Ras_Cam.watermark(True)  #watermark switch
         while True:
             button_type = Joystick_Motion_type()
             if button_type == 'shuttle':
