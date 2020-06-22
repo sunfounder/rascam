@@ -24,7 +24,7 @@ import sys
 import cv2
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import rascam.tft_screen as ST7789
 from rascam.pwm import PWM
 
@@ -49,6 +49,37 @@ from rascam.google_upload import upload
 
 sensor = Sh3001()
 power_pin_adc = ADC("A2")
+
+
+time_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 6))
+text_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 10))
+company_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 8))
+
+
+def add_text_to_image(name, text):
+    # rgba_image = image.convert('RGB')
+    # text_overlay = Image.new('RGB', rgba_image.size, (255, 255, 255))
+    image_target = Image.open(name)
+
+    image_draw = ImageDraw.Draw(image_target)
+
+    
+    time_text = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    time_size_x, time_size_y = image_draw.textsize(time_text, font=time_font(image_target.size[0]))
+    text_size_x, text_size_y = image_draw.textsize(text, font=text_font(image_target.size[0]))
+
+  # 设置文本文字位置
+    # print(rgba_image)
+    time_xy = (image_target.size[0] - time_size_x - time_size_y, image_target.size[1] - int(1.5*time_size_y))
+    text_xy = (text_size_y, image_target.size[1] - int(1.5*text_size_y))
+    company_xy = (text_size_y, image_target.size[1] - int(1.5*text_size_y) - text_size_y)
+
+  # 设置文本颜色和透明度
+    image_draw.text(time_xy, time_text, font=time_font(image_target.size[0]), fill=(255, 255, 255))
+    image_draw.text(company_xy, text, font=text_font(image_target.size[0]), fill=(255, 255, 255))
+    image_draw.text( text_xy, "SunFounder", font=company_font(image_target.size[0]), fill=(255, 255, 255))
+    # run_command("sudo rm " + str(name))
+    image_target.save(name,quality=95,subsampling=0)# 
 
 
 
@@ -327,7 +358,7 @@ class Ras_Cam():
     detect_obj_parameter['process_si'] = []
     # detect_obj_parameter['process_dict'] = {}
 
-
+    detect_obj_parameter['watermark_flag'] = True
     detect_obj_parameter['google_upload_flag'] = False
     # detect_obj_parameter['process_picture'] = True
     detect_obj_parameter['picture_path'] = '/home/pi/Pictures/rascam_picture_file/' + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ '.jpg'
@@ -406,8 +437,11 @@ class Ras_Cam():
         if id_num > Ras_Cam.detect_obj_parameter['content_num']:
             Ras_Cam.detect_obj_parameter['content_num'] = id_num
 
+    @staticmethod
+    def watermark(flag):
+        # global button_motion
 
-
+        Ras_Cam.detect_obj_parameter['watermark_flag'] = flag
 
     @staticmethod
     def show_setting(flag):
@@ -571,7 +605,8 @@ class Ras_Cam():
                 # print(Ras_Cam.detect_obj_parameter['picture_path']) 
                 camera.capture(Ras_Cam.detect_obj_parameter['picture_path'])
                 # cv2.imread()
-
+                if Ras_Cam.detect_obj_parameter['watermark_flag'] == True:
+                    add_text_to_image(Ras_Cam.detect_obj_parameter['picture_path'],'Shot by Rascam')
 
                 if Ras_Cam.detect_obj_parameter['google_upload_flag'] == True:
                     upload(file_path='/home/pi/Pictures/rascam_picture_file/', file_name=picture_time + '.jpg')
