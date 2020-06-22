@@ -238,7 +238,7 @@ def install():
     #     cmd='run_command("sudo chmod +x /etc/init.d/rascam-web-example")')
 
 ## install lib software and build dir
-# install()
+install()
 
 
 from setuptools import setup, find_packages
