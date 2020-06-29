@@ -22,4 +22,4 @@ Restart service and add Samba shared user, Input password
 sudo service smbd restart
 sudo smbpasswd -a pi
 ```
-Enter in the computer: \\local ip (local ip is raspberry pi ip),Access to shared folders
+Enter in the computer: \\\\local ip (local ip is raspberry pi ip),Access to shared folders
