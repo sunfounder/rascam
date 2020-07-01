@@ -16,7 +16,7 @@ if __name__ == "__main__":
         # -t : Total shooting length
         # tl : Interval between shots
         print("start to take picture")
-        run_command("raspistill -w 1280 -h 960 -o image_%08d.jpg -rot 180 -t 6000 -tl 2000")  # 2000 = 2000ms =2s
+        run_command("raspistill -w 1280 -h 960 -o image_%08d.jpg -rot 180 -t 600000 -tl 2000")  # 2000 = 2000ms =2s
 
         # r : frame rate
         # i : input file name   

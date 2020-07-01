@@ -8,7 +8,7 @@ if __name__ == "__main__":
         Ras_Cam.camera_start()
   
         rr = RGB_Matrix(0X74)
-
+        total_time = 8   #set the total time of countdown (uint: second)
 
         while True:
             button_type = Joystick_Motion_type()
@@ -20,7 +20,7 @@ if __name__ == "__main__":
                         break
                     rr.draw_point((i,0),fill=(255,0,0))
                     rr.display()
-                    time.sleep(1)
+                    time.sleep(float(total_time) / 8)  
                 Ras_Cam.shuttle_button(True)
                 time.sleep(1)
                 rr.draw_line((0,0,7,0),fill=(0,0,0))

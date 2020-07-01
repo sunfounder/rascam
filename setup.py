@@ -218,10 +218,12 @@ def install():
 
     if "Pictures" not in listdir("/home/pi"):
         do(msg="create .rascam directory",
-            cmd='run_command("sudo mkdir /home/pi/Pictures/")')
+            cmd='run_command("mkdir /home/pi/Pictures/")')
     if "rascam_picture_file" not in listdir("/home/pi/Pictures"):
         do(msg="create .rascam directory",
-            cmd='run_command("sudo mkdir /home/pi/Pictures/rascam_picture_file")')  
+            cmd='run_command("mkdir /home/pi/Pictures/rascam_picture_file")')
+        do(msg="change directory own",
+            cmd='run_command("sudo chown -R pi /home/pi/rascam_picture_file/")')   
     # if "rascam_time-lapse-shot_file" not in listdir("/home/pi/Pictures"):
     #     do(msg="create .rascam directory",
     #         cmd='run_command("sudo mkdir /home/pi/Pictures/rascam_time-lapse-shot_file")')  
