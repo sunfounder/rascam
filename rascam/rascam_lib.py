@@ -164,7 +164,7 @@ Ras_Cam_SETTING = [
         "awb_mode",       #'off', 'auto' (default), ‘sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent','incandescent', 'flash', or 'horizon'.
         "hflip",          # Default:False ,True
         "vflip",          # Default:False ,True
-        "crop",           #Retrieves or sets the zoom applied to the camera’s input, as a tuple (x, y, w, h) of floating point
+        # "crop",           #Retrieves or sets the zoom applied to the camera’s input, as a tuple (x, y, w, h) of floating point
                           #values ranging from 0.0 to 1.0, indicating the proportion of the image to include in the output
                           #(the ‘region of interest’). The default value is (0.0, 0.0, 1.0, 1.0), which indicates that everything
                           #should be included.
@@ -346,6 +346,7 @@ class Ras_Cam():
     detect_obj_parameter['setting'] = 0
     detect_obj_parameter['setting_flag'] = False
     detect_obj_parameter['setting_val'] = 0
+    # detect_obj_parameter['current_setting_val'] = None
     detect_obj_parameter['setting_resolution'] = (1280,960)
     detect_obj_parameter['change_setting_flag'] = False
     detect_obj_parameter['change_setting_type'] = 'None'
@@ -401,7 +402,7 @@ class Ras_Cam():
 
 
     @staticmethod
-    def change_show_setting(shirt_way = 'add'):
+    def change_show_setting(shirt_way = 'None'):
         global button_motion
         if shirt_way == 'add':
             Ras_Cam.detect_obj_parameter['setting'] += 1
@@ -413,12 +414,17 @@ class Ras_Cam():
             if Ras_Cam.detect_obj_parameter['setting'] < 0:
                 Ras_Cam.detect_obj_parameter['setting'] = len(Ras_Cam_SETTING) - 1
 
+        elif shirt_way == 'None':
+            pass
+
         else:
             raise Exception("parameter error!")
 
 
         # print(Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']])
-        return Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']]
+        if type(Ras_Cam.detect_obj_parameter['setting_val']) == str:
+            Ras_Cam.detect_obj_parameter['setting_val'] = "'" + Ras_Cam.detect_obj_parameter['setting_val'] + "'"
+        return Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']], Ras_Cam.detect_obj_parameter['setting_val']
 
 
 
@@ -550,9 +556,11 @@ class Ras_Cam():
                         # print("ss")
                         setting_type = Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']]
                         if setting_type == "resolution":
+                            Ras_Cam.detect_obj_parameter['setting_val'] = Ras_Cam.detect_obj_parameter['setting_resolution']
                             cv2.putText(img, 'resolution:' + str(Ras_Cam.detect_obj_parameter['setting_resolution']),(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,255,255),2)
                         else:
                             cmd_text = "Ras_Cam.detect_obj_parameter['setting_val'] = camera." + Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']]
+                            # print('mennu:',Ras_Cam.detect_obj_parameter['setting_val'])
                             exec(cmd_text)
                             cv2.putText(img, setting_type + ':' + str(Ras_Cam.detect_obj_parameter['setting_val']),(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,255,255),2)
                         # if RRas_Cam.detect_obj_parameter['ensure_flag'] == True:

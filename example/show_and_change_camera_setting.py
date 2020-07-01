@@ -1,41 +1,80 @@
 from rascam import Ras_Cam,power_val,Joystick_Motion_Val,Joystick_Motion_type,run_command
 import time
 
-if __name__ == "__main__":
-    try:
-        Ras_Cam.camera_start()
 
-        flag = False
-        camera_t = None
-        camera_v = None
-        while True:
-            press_count = 0
-            while Joystick_Motion_Val('press') == 0:
-                press_count+=1
-                count = 0
-                if press_count >= 20:
-                    break
-                time.sleep(0.1)
-            if press_count >=20:
-                flag = not flag
-                # print(flag)
-                Ras_Cam.show_setting(flag)
+camera_setting_dict = {
 
-            button_type = Joystick_Motion_type()
-            if button_type == 'left':
-                camera_t = Ras_Cam.change_show_setting(shirt_way = 'add')
-            elif button_type == 'right':
-                camera_t= Ras_Cam.change_show_setting(shirt_way = 'sub')
-
-            elif button_type == 'up':
-                # print('up')
-                Ras_Cam.change_setting_type_val(camera_t,0)
-            elif button_type == 'down':
-                # print('down')
-                Ras_Cam.change_setting_type_val(camera_t,100)
-            elif button_type == 'shuttle':
-                Ras_Cam.shuttle_button(True)
+        "resolution":[(640,480),(1280,960),(2560,1920),(4056,3040)],    #max(4056,3040)
+        #"framerate 
+        "rotation":[0,90 ,180 ,270],      #
     
-    finally:
-        run_command("sudo kill $(ps aux | grep 'show_and_change_camera_setting.py' | awk '{ print $2 }')")
+        "brightness":[i for i in range(0,101)],   # 0~100  default 50
+        "sharpness ":[i for i in range(-100,101)],    # -100~100  default 0
+        "contrast  ":[i for i in range(-100,101)],    # -100~100  default 0
+        "saturation":[i for i in range(-100,101)],    # -100~100  default 0
+        "iso":[0,100,200,320,400,500,640,800],           #Vaild value:0(auto) 100,200,320,400,500,640,800
+        "exposure_compensation":[i for i in range(-25,26)],       # -25~25  default 0
+        "exposure_mode":["'off'", "'auto'","'night'", "'nightpreview'", "'backlight'", "'spotlight'", "'sports'", "'snow'", "'beach'","'verylong'", "'fixedfps'", "'antishake'","'fireworks'"],       #Valid values are: 'off', 'auto' (default),'night', 'nightpreview', 'backlight', 'spotlight', 'sports', 'snow', 'beach','verylong', 'fixedfps', 'antishake', or 'fireworks'
+        "meter_mode":["'average'","'spot'", "'backlit'", "'matrix'"],     #Valid values are: 'average' (default),'spot', 'backlit', 'matrix'.
+        "awb_mode":["'off'", "'auto'", "'sunlight'", "'cloudy'", "'shade'", "'tungsten'", "'fluorescent'","'incandescent'", "'flash'", "'horizon'"],       #'off', 'auto' (default), ‘sunlight', 'cloudy', 'shade', 'tungsten', 'fluorescent','incandescent', 'flash', or 'horizon'.
+        "hflip":[False ,True],          # Default:
+        "vflip":[False ,True],          # Default:
+        # "crop":[],           #Retrieves or sets the zoom applied to the camera’s input, as a tuple (x, y, w, h) of floating point
+                          #values ranging from 0.0 to 1.0, indicating the proportion of the image to include in the output
+                          #(the ‘region of interest’). The default value is (0.0, 0.0, 1.0, 1.0), which indicates that everything
+                          #should be included.
+}
+if __name__ == "__main__":
+    # try:
+    Ras_Cam.camera_start()
+
+    flag = False
+    camera_t = 'resolution'
+    camera_v = (1280,960)
+    while True:
+        press_count = 0
+        while Joystick_Motion_Val('press') == 0:
+            press_count+=1
+            count = 0
+            if press_count >= 20:
+                break
+            time.sleep(0.1)
+        if press_count >= 20:
+            flag = not flag
+            # print(flag)
+            # camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'add')
+            Ras_Cam.show_setting(flag)
+
+        button_type = Joystick_Motion_type()
+        if button_type == 'left':
+            camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'add')   #return the camera current setting type
+        elif button_type == 'right':
+            camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'sub')
+
+        elif button_type == 'up':
+            # print('up')
+            camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'None')
+            print(type(camera_v))
+            
+            setting_choice_num = len(camera_setting_dict[camera_t])
+            print(setting_choice_num)
+            setting_val_index = camera_setting_dict[camera_t].index(camera_v)
+            if setting_val_index < setting_choice_num-1:
+                setting_val_index += 1
+
+            Ras_Cam.change_setting_type_val(camera_t,camera_setting_dict[camera_t][setting_val_index])          #change the current setting
+        elif button_type == 'down':
+            camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'None')
+            # setting_choice_num = len(camera_setting_dict[camera_t])
+            setting_val_index = camera_setting_dict[camera_t].index(camera_v)
+            if setting_val_index > 0:
+                setting_val_index -= 1
+
+            Ras_Cam.change_setting_type_val(camera_t,camera_setting_dict[camera_t][setting_val_index])          #change the current setting
+
+        elif button_type == 'shuttle':
+            Ras_Cam.shuttle_button(True)
+    
+    # finally:
+    #     run_command("sudo kill $(ps aux | grep 'show_and_change_camera_setting.py' | awk '{ print $2 }')")
 
