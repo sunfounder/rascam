@@ -100,7 +100,7 @@ class Vilib(object):
         # Vilib.worker_2 = Process(name='worker 2',target=Vilib.camera_clone)
         # Vilib.worker_2.start()
         Vilib.run_command(cmd="cp ./{} /home/pi/rascam/web_control/web_client/image/temp.jpg".format(Vilib.filename))
-        Vilib.run_command(cmd="mv ./{} /home/pi/picture_file".format(Vilib.filename))
+        Vilib.run_command(cmd="mv ./{} /home/pi/Pictures/rascam_picture_file".format(Vilib.filename))
         
 
     @staticmethod
