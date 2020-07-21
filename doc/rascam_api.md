@@ -1,22 +1,24 @@
-# 树莓派相机接口
+# Raspberry Pi Camera API
 
-## 接口函数说明，接口函数分为两个部分，一个是Ras_Cam这个类里面的和相机相关的函数，另一个是摇杆，按键等的辅助工具函数
+## The functions of ports can be divided into two parts: the camera-relevant functions in Ras_Cam and the assistant tool functions involving the toggle and the button.
+
 
 Usage:
 ```python
 from rascam import Ras_Cam,power_val,get_ip,Joystick_Motion_type,Joystick_Motion_Val
 
-Ras_Cam.camera_start()    #启动相机及屏幕
-content_1 = "IP:" + str(get_ip())      #要展示的内容1，此处是使用获取IP的接口函数获取IP地址，并赋值给内容1
+Ras_Cam.camera_start()    #run the camera and the screen
+content_1 = "IP:" + str(get_ip())      #the displayed content is 1 and here, the port function is called to get the IP and assign it to the content 1
 
-Ras_Cam.show_content(1, content_1, (int(content_1_x),15), content_1_color, font_size)      #在屏幕显示内容1的内容
-Ras_Cam.show_content(2, "power:" + str(power_val()) + "V", (0,35), content_2_color, font_size)  #在屏幕显示电压
-up_val = Joystick_Motion_Val('up')    #获取摇杆是否上推,假如按下，返回0，没有上推，返回1
+Ras_Cam.show_content(1, content_1, (int(content_1_x),15), content_1_color, font_size)      #the screen displays the content 1
+Ras_Cam.show_content(2, "power:" + str(power_val()) + "V", (0,35), content_2_color, font_size)  #The screen displays the voltage
+up_val = Joystick_Motion_Val('up')    #judge whether the joystick is toggled up; if it do this, return 0; otherwise return 1
 
-press_val = Joystick_Motion_Val('press')    #获取摇杆是否按下,假如按下，假如按下，返回0，没有按下，返回1
+press_val = Joystick_Motion_Val('press')    #judge whether the joystick is toggled down; if it do this, return 0; otherwise return 1
 
 while True:
-    print("type:",Joystick_Motion_type())         #中断方式获取摇杆的类型
+    print("type:",Joystick_Motion_type())         #get the joystick type via the interrupt mode
+
     # time.sleep(1)
 
 ```
