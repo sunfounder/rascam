@@ -178,6 +178,9 @@ def install():
         cmd='run_command("sudo pip3 install pillow")')
     do(msg="install smbus",
         cmd='run_command("sudo pip3 install smbus")')
+    do(msg="install spi",
+        cmd='run_command("sudo pip3 install Adafruit_GPIO")')
+
     do(msg="install picamera",
         cmd='run_command("sudo apt-get install python3-picamera -y")')
     do(msg="install opencv dev_1",

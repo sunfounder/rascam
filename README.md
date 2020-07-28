@@ -1,14 +1,14 @@
-# 基于树莓派制作的相机
-## 使用说明
-摄像头兼容新推出的HQ摄像头，以及之前的树莓派官方v2摄像头模块.  相机有一个摇杆和两个按键，还有两个ADC ,PWM和三个I2C接口，还有一个串口接口.
-- 按键1：屏幕左上角的按键是电源POWER按键，运行程序后，长按1s关机，然后待树莓派关机后，再按两下电源按键关闭电源.
-- 按键2：在摇杆上方有个一个长方形按键，这个按键是叫shuttle，可以自定义其功能，
-- 摇杆：一共分为上下左右中五个触发，可以自定义功能
+# The RPi-Based Camera
+## Usage
+The camera is compatible with the newly released HQ camera and the older RPi official v2 camera module. This RPi-based camera has a joystick, two buttons, two ADC and PWM ports, three I2C ports and one serial port. 
+- Button 1: At the upper left is the POWER button. After the programs run, long pressing for 1s can switch off the camera and then pressing two more times can power off.
+- Button 2: Above the joystick is a rectangular button named shuttle whose functions can be defined by users.
+- Joystick: It can be toggled up, down, left, right and center and its functions can be defined by yourself.
 
-## 功能说明 (具体示例请看example)
-- 功能1：可以显示自定义的内容于相机画面，如电池电压，ADC等，或利用I2C接口接入更多的传感器
-- 功能2：可以用摇杆等diy自己的相机，调用自己更关注的相机设置api函数，不再使用命令行
-- 功能3：RGB条模块，自定义
-- 功能4：上传谷歌云
-- 功能5：samba文件共享
-- 功能6：人脸识别
+## Function Description(Refer to Example)
+- Function 1: Display the user-defined information, including the power voltage, ADC, and the sensor plugged via I2C. 
+- Function 2: DIY your own camera via the joystick. Call the camera setting api function that you like and not use the command line.
+- Function 3: The modules of RGB strips can be defined by users.
+- Function 4: Upload to Google Cloud.
+- Function 5: samba files sharing.
+- Function 6: Face detection.
