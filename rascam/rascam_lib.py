@@ -6,6 +6,7 @@ import time
 
 rst = 5
 # GPIO.cleanup()
+GPIO.setwarnings(False)
 def reset_mcu():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(rst, GPIO.OUT)
@@ -26,6 +27,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from PIL import Image, ImageDraw, ImageFont
 import rascam.tft_screen as ST7789
+# import ST7789
 from rascam.pwm import PWM
 
 # import time
@@ -300,7 +302,7 @@ disp = ST7789.ST7789(
     dc=22,
     rst=23,
     backlight=19,               # 18 for back BG slot, 19 for front BG slot.
-    spi_speed_hz=125 * 1000 * 1000,
+    spi_speed_hz=80000000,
     width=320,
     height=240,
     rotation=180
@@ -317,9 +319,19 @@ disp.begin()
 # time.sleep(1)
 
 def dis():
+    i = 0
+    # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     while True:
-        img = Ras_Cam.img_array[0]
-        disp.display(img)
+        # img = Ras_Cam.img_array[0]
+        
+        # print(img.shape)
+        # disp.display(Ras_Cam.img_array[0])
+        # time.sleep(0.01)
+        # start_time = time.time()
+        disp.display(Ras_Cam.img_array[0])
+        # print("FPS:",int(1 / (time.time() - start_time)))
+        i +=1
+        print(i)
 
 
 class Ras_Cam(): 
@@ -363,6 +375,8 @@ class Ras_Cam():
     detect_obj_parameter['google_upload_flag'] = False
     # detect_obj_parameter['process_picture'] = True
     detect_obj_parameter['picture_path'] = '/home/pi/Pictures/rascam_picture_file/' + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ '.jpg'
+    moon = cv2.imread("moon.jpg")
+    resize_img = cv2.resize(moon, (320,240), interpolation=cv2.INTER_LINEAR) 
 
 
 # 使用白色填充图片区域,默认为黑色
@@ -509,7 +523,7 @@ class Ras_Cam():
         global effect
         camera = PiCamera()
         camera.resolution = (320, 240)
-        camera.framerate = 90
+        camera.framerate = 30
         camera.rotation = 0
     
         camera.brightness = 50    #(0 to 100)
