@@ -8,7 +8,7 @@ if __name__ == "__main__":
     try:
 
         Ras_Cam.camera_start()
-        Ras_Cam.human_detect_switch(True)
+        Ras_Cam.human_detect_switch(True) # open the human_face_detect func.
         rr = RGB_Matrix(0X74)
 
         while True:

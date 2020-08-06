@@ -157,6 +157,8 @@ def install():
         cmd='run_command("sudo apt-get update")')
     do(msg="install pip",
         cmd='run_command("sudo apt-get install python3-pip -y")')
+    do(msg="install ffmpeg",
+        cmd='run_command("sudo apt-get install ffmpeg -y")')
     # do(msg="install setuptools",
     #     cmd='run_command("sudo pip3 install setuptools -y")')
 
@@ -193,15 +195,6 @@ def install():
         cmd='run_command("sudo pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib oauth2client")')
     
 
-# sudo apt-get install libhdf5-dev libhdf5-serial-dev libhdf5-103 -y
-# sudo apt-get install libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5 -y
-# sudo apt-get install libatlas-base-dev libjasper-dev -y
-# sudo apt-get install libopenexr23  libavcodec-dev -y
-# sudo apt-get install libavformat-dev  libswscale-dev -y
-# sudo apt-get install libqtgui4 -y
-# sudo apt-get install libqt4-test -y
-
-# sudo pip3 install opencv-contrib-python==4.1.0.25
 
 
     print("Setup interfaces")
@@ -217,7 +210,7 @@ def install():
     do(msg="turn on Camera",
         cmd='Config().set("start_x", "1")') 
     do(msg="turn on Camera",
-        cmd='Config().set("gpu_mem", "128")') 
+        cmd='Config().set("gpu_mem", "256")') 
 
     if "Pictures" not in listdir("/home/pi"):
         do(msg="create .rascam directory",

@@ -11,9 +11,9 @@ if __name__ == "__main__":
         while True:
             button_type = Joystick_Motion_type()
             if button_type == 'left':
-                Ras_Cam.photo_effect('sub')
+                Ras_Cam.photo_effect('sub') # Move to the left.
             elif button_type == 'right':
-                Ras_Cam.photo_effect('add')
+                Ras_Cam.photo_effect('add') # Move to the right.
             elif button_type == 'shuttle':
                 Ras_Cam.shuttle_button(True)
     

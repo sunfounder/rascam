@@ -38,8 +38,6 @@ import datetime
 
 
 
-# reset_mcu()
-
 from rascam.sh3001 import Sh3001
 # import time
 from math import asin
@@ -108,18 +106,11 @@ def power_val():
 
 
 def imu_screen_rotate():
-    # print("1")
     acc_list = sensor.sh3001_getimudata('acc','xyz')
-    # print(acc_list)
     acc_list = [min(2046,i) for i in acc_list]
     acc_list = [max(-2046,i) for i in acc_list]
-    # print(asin(acc_list[0] / 2100.0))
     current_angle_x = (asin(acc_list[0] / 2046.0)) / math.pi * 180
     current_angle_y = (asin(acc_list[1] / 2046.0)) / math.pi * 180
-    # print((asin(acc_list[1] / 2046.0)) / math.pi * 180)
-    # time.sleep(0.1)
-    # print("current_angle_x: ",current_angle_x)
-    # print("current_angle_y: ",current_angle_y)
     return current_angle_x,current_angle_y
 
 effect = 0
@@ -154,10 +145,10 @@ Ras_Cam_SETTING = [
         "resolution",    #max(4056,3040)
         #"framerate 
         "rotation",      #(0 90 180 270)
-    
+        # "shutter_speed",
         "brightness",    # 0~100  default 50
-        "sharpness ",    # -100~100  default 0
-        "contrast  ",    # -100~100  default 0
+        "sharpness",    # -100~100  default 0
+        "contrast",    # -100~100  default 0
         "saturation",    # -100~100  default 0
         "iso",           #Vaild value:0(auto) 100,200,320,400,500,640,800
         "exposure_compensation",       # -25~25  default 0
@@ -172,7 +163,6 @@ Ras_Cam_SETTING = [
                           #should be included.
 ]
 
-# RESOLOTION = [(4056,3040),(2028,1520),(2028,1080),(1012,760)]
 
 
 GPIO.setmode(GPIO.BCM)
@@ -319,7 +309,6 @@ disp.begin()
 # time.sleep(1)
 
 def dis():
-    i = 0
     # print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
     while True:
         # img = Ras_Cam.img_array[0]
@@ -330,8 +319,7 @@ def dis():
         # start_time = time.time()
         disp.display(Ras_Cam.img_array[0])
         # print("FPS:",int(1 / (time.time() - start_time)))
-        i +=1
-        print(i)
+
 
 
 class Ras_Cam(): 
@@ -348,6 +336,7 @@ class Ras_Cam():
     face_cascade = cv2.CascadeClassifier('/home/pi/rascam/example/haarcascade_frontalface_default.xml') 
 
     detect_obj_parameter['ensure_flag'] = False
+    detect_obj_parameter['clarity_val'] = 0
 
 #diy
     detect_obj_parameter['human_n'] = 0
@@ -359,7 +348,7 @@ class Ras_Cam():
     detect_obj_parameter['setting_flag'] = False
     detect_obj_parameter['setting_val'] = 0
     # detect_obj_parameter['current_setting_val'] = None
-    detect_obj_parameter['setting_resolution'] = (1280,960)
+    detect_obj_parameter['setting_resolution'] = (3840,2880)
     detect_obj_parameter['change_setting_flag'] = False
     detect_obj_parameter['change_setting_type'] = 'None'
     detect_obj_parameter['change_setting_val'] = 0
@@ -373,10 +362,6 @@ class Ras_Cam():
 
     detect_obj_parameter['watermark_flag'] = True
     detect_obj_parameter['google_upload_flag'] = False
-    # detect_obj_parameter['process_picture'] = True
-    detect_obj_parameter['picture_path'] = '/home/pi/Pictures/rascam_picture_file/' + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+ '.jpg'
-    moon = cv2.imread("moon.jpg")
-    resize_img = cv2.resize(moon, (320,240), interpolation=cv2.INTER_LINEAR) 
 
 
 # 使用白色填充图片区域,默认为黑色
@@ -384,6 +369,10 @@ class Ras_Cam():
 
     rt_img = np.ones((320,240),np.uint8)      
     img_array[0] = rt_img 
+
+    @staticmethod
+    def clarity_val():
+        return Ras_Cam.detect_obj_parameter['clarity_val']
 
 
     @staticmethod
@@ -546,10 +535,14 @@ class Ras_Cam():
         change_type_val  = []
         try:
             while True:
-                for frame in camera.capture_continuous(rawCapture, format="rgb", use_video_port=True):
+                for frame in camera.capture_continuous(rawCapture, format="rgb",use_video_port=True):# use_video_port=True
                     img = frame.array
+                    img2gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                    Ras_Cam.detect_obj_parameter['clarity_val'] = round(cv2.Laplacian(img2gray, cv2.CV_64F).var(),2)
                     img = Ras_Cam.human_detect_func(img)
-
+                    cv2.rectangle(img, (280,10), (310,20), (255,255,255))
+                    cv2.rectangle(img, (310,13), (311,17), (255,255,255))
+                    cv2.rectangle(img, (282,12), (int((1-round(4.3 - power_val(),3)) / 1 * 26 + 282),18), (0,255,0),thickness=-1)
                     
                     # change_camera_setting
                     if Ras_Cam.detect_obj_parameter['change_setting_flag'] == True:
@@ -560,14 +553,10 @@ class Ras_Cam():
                     if Ras_Cam.detect_obj_parameter['content_num'] != 0:
 
                         for i in range(Ras_Cam.detect_obj_parameter['content_num']):
-                            # print(i)
                             exec("Ras_Cam.detect_obj_parameter['process_si'] = Ras_Cam.detect_obj_parameter['process_content_" + str(i+1) + "'" + "]")
-                                    # print(show_content_list)
-                            # print(Ras_Cam.detect_obj_parameter['process_si'])
                             cv2.putText(img, str(Ras_Cam.detect_obj_parameter['process_si'][0]),Ras_Cam.detect_obj_parameter['process_si'][1],cv2.FONT_HERSHEY_SIMPLEX,Ras_Cam.detect_obj_parameter['process_si'][3],Ras_Cam.detect_obj_parameter['process_si'][2],2)
                     
                     if Ras_Cam.detect_obj_parameter['setting_flag'] == True:
-                        # print("ss")
                         setting_type = Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']]
                         if setting_type == "resolution":
                             Ras_Cam.detect_obj_parameter['setting_val'] = Ras_Cam.detect_obj_parameter['setting_resolution']
@@ -576,10 +565,7 @@ class Ras_Cam():
                             cmd_text = "Ras_Cam.detect_obj_parameter['setting_val'] = camera." + Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']]
                             # print('mennu:',Ras_Cam.detect_obj_parameter['setting_val'])
                             exec(cmd_text)
-                            cv2.putText(img, setting_type + ':' + str(Ras_Cam.detect_obj_parameter['setting_val']),(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,255,255),2)
-                        # if RRas_Cam.detect_obj_parameter['ensure_flag'] == True:
-                        #     exec("camera." + Ras_Cam_SETTING[RRas_Cam.detect_obj_parameter['setting']] + '=' + RRas_Cam.detect_obj_parameter['setting_val'])
-                        #     cv2.circle(img, (10, 10), 6, (100, 0, 0), -1, cv2.LINE_AA)
+                            cv2.putText(img, setting_type + ': ' + str(Ras_Cam.detect_obj_parameter['setting_val']),(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,255,255),2)
 
 
                     e = EFFECTS[Ras_Cam.detect_obj_parameter['eff']]
@@ -599,6 +585,7 @@ class Ras_Cam():
     
                     Ras_Cam.img_array[0] = img
                     rawCapture.truncate(0)
+                    # print("FPS:",round(time.time() - s_time,2),camera.framerate)
 
 
                 camera = PiCamera()
@@ -606,12 +593,17 @@ class Ras_Cam():
                 # print("change_type_val:",change_type_val)
                 for i in change_type_val:
                     exec(i)
-                
                 if imu_y < 35 and imu_y >-35 and imu_x <= 90 and imu_x > 45:
-                    camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
+                    if Ras_Cam.detect_obj_parameter['setting_resolution'][0] < 3040:
+                        camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
+                    else:
+                        camera.resolution = (1920,2560)
                     camera.rotation = 270
                 elif imu_y < 35 and imu_y >-35 and imu_x < -45 and imu_x >= -90:
-                    camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
+                    if Ras_Cam.detect_obj_parameter['setting_resolution'][0] < 3040:
+                        camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
+                    else:
+                        camera.resolution = (1920,2560)
                     camera.rotation = 90
                 elif imu_y < -65 and imu_y >=-90 and imu_x < 45 and imu_x >= -45:
                     camera.resolution = Ras_Cam.detect_obj_parameter['setting_resolution']

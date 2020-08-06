@@ -5,15 +5,16 @@
 
 Usage:
 ```python
-from rascam import Ras_Cam,power_val,get_ip,Joystick_Motion_type,Joystick_Motion_Val
+from rascam import Ras_Cam,power_val,get_ip,Joystick_Motion_type,Joystick_Motion_Val,ADC
 
 Ras_Cam.camera_start()    #run the camera and the screen
 content_1 = "IP:" + str(get_ip())      #the displayed content is 1 and here, the port function is called to get the IP and assign it to the content 1
 
 Ras_Cam.show_content(1, content_1, (int(content_1_x),15), content_1_color, font_size)      #the screen displays the content 1
 Ras_Cam.show_content(2, "power:" + str(power_val()) + "V", (0,35), content_2_color, font_size)  #The screen displays the voltage
-up_val = Joystick_Motion_Val('up')    #judge whether the joystick is toggled up; if it do this, return 0; otherwise return 1
+adc_channel_1 = ADC("A0")   # the ADC aram only "A0", "A1" two channels.
 
+up_val = Joystick_Motion_Val('up')    #judge whether the joystick is toggled up; if it do this, return 0; otherwise return 1
 press_val = Joystick_Motion_Val('press')    #judge whether the joystick is toggled down; if it do this, return 0; otherwise return 1
 
 while True:
@@ -59,7 +60,7 @@ calibrate_imu_acc()
 ```
 ## class_Ras_Cam_Methods
 
-- camera_start() - start the camera and screen,only set once.
+- camera_start() - start the camera and screen.
 ```python
 Ras_Cam.camera_start()
 ```
@@ -102,3 +103,4 @@ Ras_Cam.human_detect_switch(True)
 ```python
 Ras_Cam.watermark(True)
 ```
+

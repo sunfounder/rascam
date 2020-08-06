@@ -7,7 +7,7 @@ import time
 if __name__ == "__main__":
     try:
 
-        calibrate_imu_acc()
+        calibrate_imu_acc() 
 
         while True:
             pass

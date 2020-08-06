@@ -1,5 +1,4 @@
-Example Explanation (The following examples are watermarked by default. 
-To close the watermark, you can check the take_picture.py example)
+# Example Explanation (The following examples are watermarked by default. To close the watermark, you can check the take_picture.py example)
 
 1. add_content_on_screen.py   -this example guides you to display the contents you want on the screen
 2. Countdown photo     -this example makes you take a countdown photo once you press down the shuttle button
@@ -28,3 +27,5 @@ To close the watermark, you can check the take_picture.py example)
 3. Press "s" to start your calibration
 4. Separately rotate 360°along x, y, and z in a slow way.
 5. Press Ctrl + c to exit the calibration.
+
+## If you want to know how to use functions and program. Please read the rascam_api.md,PWM.md and ADC.md

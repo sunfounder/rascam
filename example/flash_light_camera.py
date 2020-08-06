@@ -14,11 +14,11 @@ if __name__ == "__main__":
             button_type = Joystick_Motion_type()
             if button_type == 'shuttle':
                 rr.draw_line([0,0,7,0],fill=(255,255,255))
-                rr.display()
+                rr.display() # open the rgb
                 time.sleep(0.5)
                 Ras_Cam.shuttle_button(True)
                 time.sleep(0.5)
-                rr.draw_line([0,0,7,0],fill=(0,0,0))
+                rr.draw_line([0,0,7,0],fill=(0,0,0)) # close the rgb
                 rr.display()
 
     finally:

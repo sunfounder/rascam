@@ -15,7 +15,7 @@ if __name__ == "__main__":
                 Ras_Cam.shuttle_button(True)
             elif button_type == 'up':
                 # print('up')
-                set_screen_brightness(100)
+                set_screen_brightness(100)  # set screen brightness (0~100).
             elif button_type == 'down':
                 set_screen_brightness(10)
 

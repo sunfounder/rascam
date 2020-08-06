@@ -5,7 +5,7 @@ import time
 if __name__ == "__main__":
     try:
         
-        P1_Channel = PWM("P0")
+        P1_Channel = PWM("P0") # only "P0" and "P1" two pwm channels
         Ras_Cam.camera_start()
         # Ras_Cam.human_detect_switch(True)
         # rr = RGB_Matrix(0X74)

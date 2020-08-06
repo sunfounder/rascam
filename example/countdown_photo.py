@@ -2,7 +2,7 @@ from rascam import Ras_Cam,Joystick_Motion_type,RGB_Matrix,run_command
 # from rgb_matrix import RGB_Matrix
 import time
 
-
+# Eight seconds to the photo.the rgb will move
 if __name__ == "__main__":
     try:
         Ras_Cam.camera_start()
