@@ -195,8 +195,6 @@ def install():
         cmd='run_command("sudo pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib oauth2client")')
     
 
-
-
     print("Setup interfaces")
     do(msg="turn on I2C",
         cmd='Config().set("dtparam=i2c_arm", "on")') 
@@ -219,7 +217,7 @@ def install():
         do(msg="create .rascam directory",
             cmd='run_command("mkdir /home/pi/Pictures/rascam_picture_file")')
         do(msg="change directory own",
-            cmd='run_command("sudo chown -R pi /home/pi/rascam_picture_file/")')   
+            cmd='run_command("sudo chown -R pi /home/pi/Pictures/rascam_picture_file/")')   
     # if "rascam_time-lapse-shot_file" not in listdir("/home/pi/Pictures"):
     #     do(msg="create .rascam directory",
     #         cmd='run_command("sudo mkdir /home/pi/Pictures/rascam_time-lapse-shot_file")')  

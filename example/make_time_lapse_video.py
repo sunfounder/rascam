@@ -6,12 +6,12 @@ import datetime
 if __name__ == "__main__":
     try:
         # clear all the jpg file
-        # Ras_Cam.camera_start()
-        # print("press shuttle to start")
-        # while True:
-        #     button_type = Joystick_Motion_type()  # get joystick motion
-        #     if button_type == 'shuttle':
-        #         break
+        Ras_Cam.camera_start()
+        print("press shuttle to start")
+        while True:
+            button_type = Joystick_Motion_type()  # get joystick motion
+            if button_type == 'shuttle':
+                break
 
         print("clean all the jpg file in 5 seconds")
         time.sleep(5)
@@ -33,6 +33,7 @@ if __name__ == "__main__":
         print("Making videos...")
         run_command("ffmpeg -r 25 -i image_%8d.jpg -vcodec libx264 time_lapse.mp4") # r: FPS
         print("Finish!")
+        run_command("sudo rm *.jpg")
     
     finally:
         # pass
