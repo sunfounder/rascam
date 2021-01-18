@@ -134,6 +134,7 @@ def upload(file_path=None, file_name=None, update_drive_service_folder_name=None
 
     store = file.Storage('token.json')
     creds = store.get()
+    os.chdir('/home/pi/rascam/rascam')
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
