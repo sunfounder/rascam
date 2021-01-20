@@ -5,7 +5,7 @@ import os
 import re
 
 
-CODE_DIR = "/home/pi/rascam/web_control"
+CODE_DIR = "/home/pi/rascam/example/web_control"
 
 def getIP(ifaces=['wlan0', 'eth0']):
     if isinstance(ifaces, str):
