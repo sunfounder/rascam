@@ -52,35 +52,48 @@ if __name__ == "__main__":
                 Ras_Cam.show_setting(flag)   #show camera setting
 
             button_type = Joystick_Motion_type()
-            if button_type == 'left':
-                camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'add')   #Toggle the round button to the left or right.it will return the camera current setting type
-            elif button_type == 'right':
-                camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'sub')
+            while  flag:
+                press_count = 0
+                while Joystick_Motion_Val('press') == 0: # Press and hold the round button for two seconds.It controls the display and exit of camera parameters
+                    press_count+=1
+                    count = 0
+                    if press_count >= 20:
+                        break
+                    time.sleep(0.1)
+                if press_count >= 20:
+                    flag = not flag
+                    Ras_Cam.show_setting(flag)   #show camera setting
 
-            elif button_type == 'up':
-                camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'None')
-                
-                setting_choice_num = len(camera_setting_dict[camera_t])
-                setting_val_index = camera_setting_dict[camera_t].index(camera_v)
-                if setting_val_index < setting_choice_num-1:
-                    setting_val_index += 1
+                button_type = Joystick_Motion_type()
+                if button_type == 'left':
+                    camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'add')   #Toggle the round button to the left or right.it will return the camera current setting type
+                elif button_type == 'right':
+                    camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'sub')
 
-                Ras_Cam.change_setting_type_val(camera_t,camera_setting_dict[camera_t][setting_val_index])          #change the current setting
-            elif button_type == 'down':
-                camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'None')
-                print(camera_t,camera_v)
-                # setting_choice_num = len(camera_setting_dict[camera_t])
-                setting_val_index = camera_setting_dict[camera_t].index(camera_v)
-                if setting_val_index > 0:
-                    setting_val_index -= 1
+                elif button_type == 'up':
+                    camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'None')
+                    
+                    setting_choice_num = len(camera_setting_dict[camera_t])
+                    setting_val_index = camera_setting_dict[camera_t].index(camera_v)
+                    if setting_val_index < setting_choice_num-1:
+                        setting_val_index += 1
 
-                Ras_Cam.change_setting_type_val(camera_t,camera_setting_dict[camera_t][setting_val_index])          #change the current setting
+                    Ras_Cam.change_setting_type_val(camera_t,camera_setting_dict[camera_t][setting_val_index])          #change the current setting
+                elif button_type == 'down':
+                    camera_t,camera_v = Ras_Cam.change_show_setting(shirt_way = 'None')
+                    print(camera_t,camera_v)
+                    # setting_choice_num = len(camera_setting_dict[camera_t])
+                    setting_val_index = camera_setting_dict[camera_t].index(camera_v)
+                    if setting_val_index > 0:
+                        setting_val_index -= 1
 
-            elif button_type == 'shuttle':
+                    Ras_Cam.change_setting_type_val(camera_t,camera_setting_dict[camera_t][setting_val_index])          #change the current setting
+
+            if button_type == 'shuttle':
                 Ras_Cam.shuttle_button(True)
 
     
     finally:
-        pass
-        # run_command("sudo kill $(ps aux | grep 'show_and_change_camera_setting.py' | awk '{ print $2 }')")
+        # pass
+        run_command("sudo kill $(ps aux | grep 'show_and_change_camera_setting.py' | awk '{ print $2 }')")
 

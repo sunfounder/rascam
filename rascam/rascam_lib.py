@@ -46,7 +46,7 @@ import math
 from rascam.adc import ADC
 from rascam.google_upload import upload
 
-
+import re
 
 sensor = Sh3001()
 power_pin_adc = ADC("A2")
@@ -57,7 +57,7 @@ text_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.
 company_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 8))
 
 
-def add_text_to_image(name, text):
+def add_text_to_image(name, text_1, text_2):
     # rgba_image = image.convert('RGB')
     # text_overlay = Image.new('RGB', rgba_image.size, (255, 255, 255))
     image_target = Image.open(name)
@@ -67,7 +67,7 @@ def add_text_to_image(name, text):
     
     time_text = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     time_size_x, time_size_y = image_draw.textsize(time_text, font=time_font(image_target.size[0]))
-    text_size_x, text_size_y = image_draw.textsize(text, font=text_font(image_target.size[0]))
+    text_size_x, text_size_y = image_draw.textsize(text_1, font=text_font(image_target.size[0]))
 
   # 设置文本文字位置
     # print(rgba_image)
@@ -77,8 +77,8 @@ def add_text_to_image(name, text):
 
   # 设置文本颜色和透明度
     image_draw.text(time_xy, time_text, font=time_font(image_target.size[0]), fill=(255, 255, 255))
-    image_draw.text(company_xy, text, font=text_font(image_target.size[0]), fill=(255, 255, 255))
-    image_draw.text( text_xy, "SunFounder", font=company_font(image_target.size[0]), fill=(255, 255, 255))
+    image_draw.text(company_xy, text_1, font=text_font(image_target.size[0]), fill=(255, 255, 255))
+    image_draw.text(text_xy, text_2, font=company_font(image_target.size[0]), fill=(255, 255, 255))
     # run_command("sudo rm " + str(name))
     image_target.save(name,quality=95,subsampling=0)# 
 
@@ -92,18 +92,28 @@ def run_command(cmd):
     status = p.poll()
     return status, result
 
-def get_ip():
-    _, result = run_command("hostname -I")
-    ip = result.split(" ")
-    return ip[0]
-
+# def get_ip():
+#     _, result = run_command("sudo hostname -I")
+#     ip = result.split(" ")
+#     return ip[0]
+def getIP(ifaces=['wlan0', 'eth0']):
+    if isinstance(ifaces, str):
+        ifaces = [ifaces]
+    for iface in list(ifaces):
+        search_str = 'ip addr show {}'.format(iface)
+        result = os.popen(search_str).read()
+        com = re.compile(r'(?<=inet )(.*)(?=\/)', re.M)
+        ipv4 = re.search(com, result)
+        if ipv4:
+            ipv4 = ipv4.groups()[0]
+            return ipv4
+    return False
 
 def calibrate_imu_acc():
     sensor.acc_calibrate_cmd()
 
 def power_val():
     return round(power_pin_adc.read() / 4096.0 * 3.3 * 2,2)
-
 
 
 def imu_rotate():
@@ -409,6 +419,9 @@ class Ras_Cam():
         
         worker_2 = Process(name='worker 2',target=Ras_Cam.camera_clone)
         worker_1 = Process(name='worker 1',target=dis)
+        # worker_2 = threading.Thread(name='worker 2',target=Ras_Cam.camera_clone)
+        # worker_2.daemon(True)
+        # worker_1 = threading.Thread(name='worker 1',target=dis)
         # worker_3 = Process(name='worker 3',target=web_camera_start)
         worker_1.start()
         worker_2.start()
@@ -538,8 +551,8 @@ class Ras_Cam():
     def camera():
         global effect
         camera = PiCamera()
-        camera.resolution = (320, 240)
-        camera.framerate = 30
+        camera.resolution = (640, 480)
+        camera.framerate = 20
         camera.rotation = 0
     
         camera.brightness = 50    #(0 to 100)
@@ -566,6 +579,8 @@ class Ras_Cam():
             while True:
                 for frame in camera.capture_continuous(rawCapture, format="rgb",use_video_port=True):# use_video_port=True
                     img = frame.array
+                    img = cv2.resize(img, (320,240), interpolation=cv2.INTER_AREA)
+
                     img2gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                     Ras_Cam.detect_obj_parameter['clarity_val'] = round(cv2.Laplacian(img2gray, cv2.CV_64F).var(),2)
                     img = Ras_Cam.human_detect_func(img)
@@ -672,12 +687,12 @@ class Ras_Cam():
                 a_t = "sudo raspistill" +  " -t 250" + " -ss " + str(change_type_dict['shutter_speed']) + " -w " + str(image_width) + " -h " + str(image_height) + " -br " + str(change_type_dict['brightness']) + " -co " + str(change_type_dict['contrast']) \
                 + " -sh " + str(change_type_dict['sharpness']) + " -sa " + str(change_type_dict['saturation']) + " -ISO " + str(change_type_dict['iso']) + " -ev " + str(change_type_dict['exposure_compensation']) + " -ex " + str(change_type_dict['exposure_mode']) + " -mm " + str(change_type_dict['meter_mode']) \
                 + " -rot " + str(change_type_dict['rotation']) +" -ifx " + str(EFFECTS[Ras_Cam.detect_obj_parameter['eff']]) + " -awb " + str(change_type_dict['awb_mode']) + " -drc " + str(change_type_dict['drc_strength']) + " -o " + Ras_Cam.detect_obj_parameter['picture_path']
-                print(a_t)
+                # print(a_t)
                 run_command(a_t)
                 # camera.capture(Ras_Cam.detect_obj_parameter['picture_path'])
                 # cv2.imread()
                 if Ras_Cam.detect_obj_parameter['watermark_flag'] == True:
-                    add_text_to_image(Ras_Cam.detect_obj_parameter['picture_path'],'Shot by Rascam')
+                    add_text_to_image(Ras_Cam.detect_obj_parameter['picture_path'],'Shot by Rascam','Sunfounder')
 
                 if Ras_Cam.detect_obj_parameter['google_upload_flag'] == True:
                     upload(file_path='/home/pi/Pictures/rascam_picture_file/', file_name=picture_time + '.jpg')
@@ -685,7 +700,7 @@ class Ras_Cam():
                 #init again
                 # camera.close()
                 camera = PiCamera()
-                camera.resolution = (320,240)
+                camera.resolution = (640,480)
                 camera.image_effect = e
                 rawCapture = PiRGBArray(camera, size=camera.resolution) 
                 Ras_Cam.detect_obj_parameter['photo_button_flag'] = False
