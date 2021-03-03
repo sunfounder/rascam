@@ -179,10 +179,11 @@ def install():
     do(msg="install PIL",
         cmd='run_command("sudo pip3 install pillow")')
     do(msg="install smbus",
-        cmd='run_command("sudo pip3 install smbus")')
+        cmd='run_command("sudo pip3 install smbus")') 
     do(msg="install spi",
         cmd='run_command("sudo pip3 install Adafruit_GPIO")')
-
+    do(msg="install websockets",
+        cmd='run_command("sudo pip3 install websockets")')
     do(msg="install picamera",
         cmd='run_command("sudo apt-get install python3-picamera -y")')
     do(msg="install opencv dev_1",
@@ -217,7 +218,7 @@ def install():
         do(msg="create .rascam directory",
             cmd='run_command("mkdir /home/pi/Pictures/rascam_picture_file")')
         do(msg="change directory own",
-            cmd='run_command("sudo chown -R pi /home/pi/Pictures/rascam_picture_file/")')   
+            cmd='run_command("sudo chown -R pi:pi /home/pi/Pictures/rascam_picture_file/")')   
     # if "rascam_time-lapse-shot_file" not in listdir("/home/pi/Pictures"):
     #     do(msg="create .rascam directory",
     #         cmd='run_command("sudo mkdir /home/pi/Pictures/rascam_time-lapse-shot_file")')  
