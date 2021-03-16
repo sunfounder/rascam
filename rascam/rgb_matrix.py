@@ -283,13 +283,19 @@ class RGB_Matrix():
             self.draw.rectangle((0,0,self.width,self.height), outline=0, fill=0)
 
     def draw_point(self,coor,fill=(10,10,10)):
+        coor = coor - 1
+        # if coor < 0:
+        #     coor = 0
+        coor_tuple = (coor,0)
         # self.draw.rectangle((0,0,self.width,self.height), outline=0, fill=0)
-        self.draw.point(coor,fill)
+        self.draw.point(coor_tuple,fill)
         # img = list(self.new_image.getdata())
         # self.image(img)
 
     def draw_line(self,coor,fill,width=0, joint=None):
-        self.draw.line(coor,fill, width=0, joint=None)
+        coor = list(coor)
+        coor_tuple = (coor[0]-1,0,coor[1]-1,0)
+        self.draw.line(coor_tuple,fill,width=0, joint=None)
         # img = list(self.new_image.getdata())
         # self.image(img)
 
