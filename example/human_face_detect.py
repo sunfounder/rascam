@@ -12,8 +12,10 @@ if __name__ == "__main__":
         rr = RGB_Matrix(0X74)
 
         while True:
-            # print("detect face number:",Ras_Cam.human_detect_object_num())
-            if Ras_Cam.human_detect_object_num() > 0:
+            human_face_num = Ras_Cam.human_detect_object_num()
+            # print("detect face number:",)
+            if human_face_num > 0:
+                print("I find %d people !!!" % human_face_num)
                 rr.draw_line((1,8),fill=(0,255,0))
                 rr.display()
             else:

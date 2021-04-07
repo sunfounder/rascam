@@ -31,5 +31,5 @@ if __name__ == "__main__":
         # run_command("sudo rm /home/pi/Pictures/time_lapse_video/*.jpg")
     
     finally:
-        pass
-        # run_command("sudo kill $(ps aux | grep 'make_time_lapse_video.py' | awk '{ print $2 }')")
+        # pass
+        run_command("sudo kill $(ps aux | grep 'make_time_lapse_video.py' | awk '{ print $2 }')")
