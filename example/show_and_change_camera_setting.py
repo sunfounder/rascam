@@ -51,7 +51,7 @@ if __name__ == "__main__":
                     Ras_Cam.show_setting(setting_menu_flag)   #show camera setting
 
             elif setting_menu_flag == False and button_type == 'up':        
-                while Joystick_Motion_Val('up') == 0: # Press and hold the round button for two seconds.It controls the display and exit of camera parameters
+                while Joystick_Motion_Val('up') == 0: # Press and hold the round button for two seconds.It controls the display and exit of the horizontal line
                     print('up:',press_counter)
                     press_counter+=1
                     count = 0
@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 if press_counter >= 20:
                     horizontal_flag = not horizontal_flag
                     print(horizontal_flag)
-                    Ras_Cam.horizontal_line(horizontal_flag)  #show camera setting
+                    Ras_Cam.horizontal_line(horizontal_flag)  #display the horizontal line
                 continue
                 # break
 

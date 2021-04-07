@@ -20,11 +20,13 @@
 5. Joystick_Motion_type()
 # This function will return a state of the current joystick, type string, such as "'left", "right", "up", "down", "shuttle", "press", "power"
 
-
 6. Joystick_Motion_Val('press')
 # This function will return whether the rocker action corresponding to the incoming parameters is true, if true, it returns 1, otherwise it returns 0. (The incoming parameters can be the above 5 strings)
-```
 
+7.Ras_Cam.horizontal_line(True)
+# Turn on the function to add horizontal line to the screen
+```
+### Diy Functions
 1. add_content_on_screen.py:This example is to teach you how to display some content you want on the screen, this example shows the detected values of the two ADCs, as well as the Raspberry Pi IP and camera voltage
 
 ```python
