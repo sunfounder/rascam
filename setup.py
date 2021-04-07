@@ -219,9 +219,11 @@ def install():
             cmd='run_command("mkdir /home/pi/Pictures/rascam_picture_file")')
         do(msg="change directory own",
             cmd='run_command("sudo chown -R pi:pi /home/pi/Pictures/rascam_picture_file/")')   
-    # if "rascam_time-lapse-shot_file" not in listdir("/home/pi/Pictures"):
-    #     do(msg="create .rascam directory",
-    #         cmd='run_command("sudo mkdir /home/pi/Pictures/rascam_time-lapse-shot_file")')  
+    if "time_lapse_video" not in listdir("/home/pi/Pictures"):
+        do(msg="create time_lapse_video directory",
+            cmd='run_command("sudo mkdir /home/pi/Pictures/time_lapse_video")')  
+        do(msg="change directory own",
+            cmd='run_command("sudo chown -R pi:pi /home/pi/Pictures/time_lapse_video/")')  
 
     do(msg="copy rascam-config",
         cmd='run_command("sudo cp ./data/config /home/pi/.rascam_config")')

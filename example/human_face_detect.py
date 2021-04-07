@@ -14,10 +14,10 @@ if __name__ == "__main__":
         while True:
             # print("detect face number:",Ras_Cam.human_detect_object_num())
             if Ras_Cam.human_detect_object_num() > 0:
-                rr.draw_line((0,0,7,0),fill=(0,255,0))
+                rr.draw_line((1,8),fill=(0,255,0))
                 rr.display()
             else:
-                rr.draw_line((0,0,7,0),fill=(255,0,0))
+                rr.draw_line((1,8),fill=(255,0,0))
                 rr.display()
 
             button_type = Joystick_Motion_type()

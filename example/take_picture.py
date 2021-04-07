@@ -17,6 +17,8 @@ if __name__ == "__main__":
             button_type = Joystick_Motion_type()
             if button_type == 'shuttle':
                 Ras_Cam.shuttle_button(True)   #control the shutlle
+            # elif button_type == 'press':
+            #     Ras_Cam.video_flag(False)   #control the shutlle
             
             Ras_Cam.show_content(1, "clarity: " + str(Ras_Cam.clarity_val()), font_coordinates, content_1_color, font_size)  # show claritysss(you can add this func to onther example,Especially Raspberry Pi High Quality Camera)
            

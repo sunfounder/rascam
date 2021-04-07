@@ -15,15 +15,15 @@ if __name__ == "__main__":
             if button_type == 'shuttle':
                 for i in range(9):
                     if i == 8:
-                        rr.draw_line((0,0,7,0),fill=(0,255,0))
+                        rr.draw_line((1,8),fill=(0,255,0))
                         rr.display()
                         break
-                    rr.draw_point((i,0),fill=(255,0,0))
+                    rr.draw_point((i),fill=(255,0,0))
                     rr.display()
                     time.sleep(float(total_time) / 8)  
                 Ras_Cam.shuttle_button(True)
                 time.sleep(1)
-                rr.draw_line((0,0,7,0),fill=(0,0,0))
+                rr.draw_line((1,8),fill=(0,0,0))
                 rr.display()
     
     finally:
