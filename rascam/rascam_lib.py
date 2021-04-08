@@ -156,7 +156,7 @@ Ras_Cam_SETTING = [
         # "time",       #
         "resolution",    #max(4056,3040)
         #"framerate 
-        "rotation",      #(0 90 180 270)
+        # "rotation",      #(0 90 180 270)
         # "shutter_speed",
         "brightness",    # 0~100  default 50
         "sharpness",    # -100~100  default 0
@@ -596,7 +596,7 @@ class Ras_Cam():
         show_content_list = []
         change_type_val  = []
         change_type_dict = {"resolution":[2592,1944], "brightness":50, "contrast":0, "sharpness":0, "saturation":0, "iso":0, "exposure_compensation":0, "exposure_mode":'auto', \
-            "meter_mode":'average' ,"rotation":0 ,"awb_mode":'auto',"drc_strength":'off'}
+            "meter_mode":'average',"awb_mode":'auto',"drc_strength":'off'}
         ptStart_1 = (0,80)
         ptEnd_1 = (320, 80)
         ptStart_2 = (0,160)

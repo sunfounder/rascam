@@ -9,7 +9,7 @@
 # This function is used to start the camera, basically it is used in every example, for the protection of the Raspberry Pi, as long as this function is used, you can press and hold the power button for two seconds to let the Raspberry Pi first normal shutdown, and then after the Raspberry Pi is finished shutting down, finally press the power button twice in a row to directly shut down the power
 
 2. Ras_Cam.shuttle_button(True)  
-# This function is used to implement the photo function, using software to achieve the shutter press action
+# This function is used to implement the photo function, using software to achieve the shutter press action.All the pictures was in the Path: /home/pi/Pictures/rascam_picture_file/
 
 3. Ras_Cam.watermark(True)  
 # Turn on the function to add watermarks to photos
@@ -60,7 +60,7 @@ Ras_Cam.human_detect_switch(True) #Turn on the face recognition function
 Ras_Cam.human_detect_object_num() #This function is used to return the number of faces detected
 ```
 
-5. make_time_lapse_video.py：This example is for time lapse photography, if it runs successfully, it will generate a 1920 x 1440 25 FPS  video at path (/home/pi/Pictures/time_lapse_video/) 
+5. make_time_lapse_video.py：This example is for time lapse photography, if it runs successfully, it will generate a 1920 x 1440 25 FPS 10s video at path (/home/pi/Pictures/time_lapse_video) 
 
 6. photo_effect.py:This example is used to demonstrate the toggle filter function
 ```python
@@ -76,7 +76,7 @@ Ras_Cam.photo_effect('add') # Right shift switch.
 set_screen_brightness(100)  # set screen brightness (0~100).
 ```
 
-9. show_and_change_camera_setting.py：This example is used to adjust some adjustable parameters of the camera in real time, and you can take a picture with the shuttle button when the parameter setting is launched
+9. show_and_change_camera_setting.py：This example is used to adjust some adjustable parameters of the camera in real time.The menu will be displayed or undisplayed after you press the joystick for two seconds. and the horizontal line will be displayed or undisplayed after you push up the joystick for two seconds.You can take a picture with the shuttle button when the parameter setting is launched
 ```python
 Ras_Cam.show_setting(True) # display the setting of camera 
 Ras_Cam.show_setting(False) # undisplay the setting of camera               
@@ -87,6 +87,6 @@ Ras_Cam.show_setting(False) # undisplay the setting of camera
 Ras_Cam.google_upload(True) # Open google drive upload function
 ```
 
-11. take_picture.py:This example shows the use of the function Ras_Cam.clarity_val, which allows you to take pictures with the shuttle button
+11. take_picture.py:This example shows the use of the function Ras_Cam.clarity_val(This func was for the HQ camera), which allows you to take pictures with the shuttle button
 
 

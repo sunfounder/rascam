@@ -5,10 +5,11 @@ The camera is compatible with the newly released HQ camera and the older RPi off
 - Button 2: Above the joystick is a rectangular button named shuttle whose functions can be defined by users.
 - Joystick: It can be toggled up, down, left, right and center and its functions can be defined by yourself.
 
-## Function Description(Refer to Example)
+## Function Description(Refer to Example.You can read the /doc/User_Software_Manuals.md for more detail about Software)
 - Function 1: Display the user-defined information, including the power voltage, ADC, and the sensor plugged via I2C. 
 - Function 2: DIY your own camera via the joystick. Call the camera setting api function that you like and not use the command line.
 - Function 3: The modules of RGB strips can be defined by users.
 - Function 4: Upload to Google Cloud.
 - Function 5: samba files sharing.
 - Function 6: Face detection.
+- (We will be updated with more functions in the future. And also hope that more people who interested in it together to improve this product)

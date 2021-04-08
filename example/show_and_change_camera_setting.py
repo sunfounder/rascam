@@ -4,7 +4,7 @@ import time
 ## camera_setting,you can diy by yourself.just add new item to the dict.Like the one shown below.
 camera_setting_dict = {
         "resolution":[(640,480),(1280,960),(1920,1440),(2592,1944)],    
-        "rotation":[0,90,180,270],      #
+        # "rotation":[0,90,180,270],      #
         "brightness":[i for i in range(0,101)],   # 0~100  default 50
         "sharpness":[i for i in range(-100,101)],    # -100~100  default 0
         "contrast":[i for i in range(-100,101)],    # -100~100  default 0
@@ -23,7 +23,7 @@ if __name__ == "__main__":
         Ras_Cam.camera_start()
 
         setting_menu_flag = False
-        horizontal_flag = False
+        horizontal_flag = True
         camera_type = 'resolution'
         camera_val = (1920,1440)  # set the the init resolution 
         # content_1_color = [0,255,255]   # content 2 text color
