@@ -8,8 +8,6 @@ This chapter introduces how to use Rascam, DIY, etc.
 
     take_a_photo
     check_photos
-    mount_photo_album_to_windows
-    mount_photo_album_to_ios
     start_on_boot
     diy_function
 
