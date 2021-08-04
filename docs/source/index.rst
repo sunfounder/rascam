@@ -6,6 +6,25 @@
 Welcome to rascam's documentation!
 ==================================
 
+Rascam is a RPi-based camera whose functions and designs can be added by users.
+
+Rascam comes with LCD screen and RGB Flash that are indispensible for a camera.
+
+The additional parts, including shutter, joystick, power, render the camera some features of digital camera. Besides, 
+the camera has 9 extension ports (2 * I/O, 2 *ADC, 2* PWM, 
+2*I2C and a UART port), which satisfies your requirements 
+of plugging sensors and some other external equipments.
+
+As you can see, the suitable Camera module is already included in the product lists. Here, you also have the installing holes and some accessories of High Quality Camera. All 
+these parts are designed well for your practical use.
+
+In the user manual, you can learn about how to build Rascam with Raspberry Pi, run the camera program via command lines, share photos with samba and modify relative 
+functions of taking a photo with program.
+
+There are 11 wonderful examples for your reference (add 
+filter, do some time-lapse photography, etc.)
+
+
 .. toctree::
    :maxdepth: 2
    
