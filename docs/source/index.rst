@@ -8,13 +8,7 @@ Welcome to rascam's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   
+   component_list_and_assembly_instructions
+   ready_to_play
+   go_to_play
