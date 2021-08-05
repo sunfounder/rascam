@@ -135,17 +135,3 @@ browsers. Steps are:
 4. Input the IP of Rascam on the browser of your devices to enter the using page.
 
 5. Play it.
-
-
-**Copyright Notice**
-
-All contents including but not limited to texts, images, and 
-code in this manual are owned by the SunFounder Company. 
-
-You should only use it for personal study, investigation, enjoyment, or other non-commercial or nonprofit purposes, 
-under the related regulations and copyrights laws, without 
-infringing the legal rights of the author and relevant right 
-holders.
-
-For any individual or organization that uses these for commercial profit without permission, the Company reserves 
-the right to take legal action. 

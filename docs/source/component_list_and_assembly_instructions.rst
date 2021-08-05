@@ -5,6 +5,4 @@ You need to check whether there are missing or damaged components according to t
 
 Please follow the steps on the PDF to assemble.
 
-If the servo has been powered on, please do not turn the Servo shaft to avoid damage.
-
 :download:`Component List and Assembly Instructions<https://github.com/sunfounder/sf-pdf/raw/master/assembly_file/a0000330-rascam.pdf>`

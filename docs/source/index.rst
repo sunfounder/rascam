@@ -24,3 +24,19 @@ these parts are designed well for your practical use.
    component_list_and_assembly_instructions
    ready_to_play
    go_to_play
+
+
+
+
+**Copyright Notice**
+
+All contents including but not limited to texts, images, and 
+code in this manual are owned by the SunFounder Company. 
+
+You should only use it for personal study, investigation, enjoyment, or other non-commercial or nonprofit purposes, 
+under the related regulations and copyrights laws, without 
+infringing the legal rights of the author and relevant right 
+holders.
+
+For any individual or organization that uses these for commercial profit without permission, the Company reserves 
+the right to take legal action. 
