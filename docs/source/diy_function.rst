@@ -5,12 +5,20 @@ Rascam comes with many interesting functions that you
 can try one by one or combine them to be new ones.
 
 1. Enter the folder and list the example files. 
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
     cd /home/pi/rascam/example
 
 2. List the example files. 
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -25,6 +33,10 @@ can try one by one or combine them to be new ones.
 .. image:: media/19.jpg
 
 3. You can run the python codes by the following command.
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -121,12 +133,20 @@ browsers. Steps are:
 1. Execute step 1~8 of \"take_picture_and_upload.py\". If steps have been executed, skip the operation.
 
 2. Go into the path:
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
     cd /home/pi/rascam/example/web_control
 
 3. Run the python code:
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 

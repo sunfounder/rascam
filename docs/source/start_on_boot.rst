@@ -5,6 +5,10 @@ Modify crontab to make Rascam start the camera program
 on boot. Steps are:
 
 1. Run the command.
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -15,6 +19,10 @@ on boot. Steps are:
     At the first time you execute the command, you need to select an editor and then choose nano.
 
 2. Input the following content at the end of the file.
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -27,12 +35,20 @@ on boot. Steps are:
     on boot”, back to the file and delete this line.
 
 3. Then save and exit and you should see the message.
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
     crontab: installing new crontab
 
 4. Reboot.
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 

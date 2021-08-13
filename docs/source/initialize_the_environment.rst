@@ -5,6 +5,10 @@ Initialize the environment before playing the Rascam. The
 methods are as follows.
 
 1. Change directory to /home/pi.
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -17,18 +21,30 @@ methods are as follows.
     here is to go to the path /home/pi/.
 
 2. Clone the repository from github.
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
     git clone https://github.com/sunfounder/rascam.git
 
 3. Enter the folder rascam
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
     cd /home/pi/rascam
 
 4. Start up the initialization function.
+   
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 

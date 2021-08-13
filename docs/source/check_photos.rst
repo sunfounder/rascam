@@ -5,6 +5,10 @@ Samba helps when you share and other devices access
 your photo album. Steps:
 
 1. Run the command to set up Samba service.
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -12,6 +16,10 @@ your photo album. Steps:
     sudo apt-get install samba samba-common-bin
 
 2. Configure Samba typing.
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -22,6 +30,10 @@ your photo album. Steps:
     Press ctrl+o to save what you modify in nano editor, ctrl+x to to exit.
 
 Input the following content at the end of the file:
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -33,6 +45,10 @@ Input the following content at the end of the file:
     writable = yes 
 
 3. Restart Samba service.
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
@@ -40,6 +56,10 @@ Input the following content at the end of the file:
 
 
 4. Add sharing account.
+  
+.. raw:: html
+
+    <run></run>
 
 .. code-block::
 
