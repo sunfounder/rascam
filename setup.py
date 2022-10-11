@@ -2,13 +2,12 @@
 # from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
-from os import path
-from os import system
-from os import listdir
+from os import path, system, listdir
 import sys
 import tty
 import termios
-import asyncio
+import time
+import threading
 
 errors = []
 
@@ -46,16 +45,40 @@ def run_command(cmd=""):
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     result = p.stdout.read().decode('utf-8')
     status = p.poll()
-    # print(result)
-    # print(status)
     return status, result
 
+at_work_tip_sw = False
+def working_tip():
+    char = ['/', '-', '\\', '|']
+    i = 0
+    global at_work_tip_sw
+    while at_work_tip_sw:  
+            i = (i+1)%4 
+            sys.stdout.write('\033[?25l') # cursor invisible
+            sys.stdout.write('%s\033[1D'%char[i])
+            sys.stdout.flush()
+            time.sleep(0.5)
+
+    sys.stdout.write(' \033[1D')
+    sys.stdout.write('\033[?25h') # cursor visible 
+    sys.stdout.flush() 
 
 def do(msg="", cmd=""):
-    print(" - %s..." % (msg), end='\r')
-    print(" - %s... " % (msg), end='')
+    print(" - %s... " % (msg), end='', flush=True)
+    # at_work_tip start 
+    global at_work_tip_sw
+    at_work_tip_sw = True
+    _thread = threading.Thread(target=working_tip)
+    _thread.setDaemon(True)
+    _thread.start()
+    # process run
     status, result = eval(cmd)
     # print(status, result)
+    # at_work_tip stop
+    at_work_tip_sw = False
+    while _thread.is_alive():
+        time.sleep(0.1)
+    # status
     if status == 0 or status == None or result == "":
         print('Done')
     else:
@@ -151,6 +174,10 @@ class Config(object):
         except Exception as e:
             return -1, e
 
+def check_raspbain_version():
+    _, result = run_command("cat /etc/debian_version|awk -F. '{print $1}'")
+    return result.strip()
+
 def install():
     print("Install dependency")
     do(msg="update apt-get",
@@ -187,14 +214,24 @@ def install():
     do(msg="install picamera",
         cmd='run_command("sudo apt-get install python3-picamera -y")')
     do(msg="install opencv dev_1",
-        cmd='run_command("sudo apt-get install libhdf5-dev libhdf5-serial-dev libhdf5-103 libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5 -y")')
+        cmd='run_command("sudo apt-get install libhdf5-dev libhdf5-serial-dev libhdf5-103 python3-pyqt5 -y")')
     do(msg="install opencv dev_2",
-        cmd='run_command("sudo apt-get install libatlas-base-dev libjasper-dev libopenexr23  libavcodec-dev libavformat-dev  libswscale-dev libqtgui4 libqt4-test -y")')
-    do(msg="install opencv4.1.0",
-        cmd='run_command("sudo pip3 install opencv-contrib-python==4.1.0.25")')
+        cmd='run_command("sudo apt-get install libatlas-base-dev libjasper-dev libavcodec-dev libavformat-dev  libswscale-dev -y")')
+    do(msg="install opencv-contrib-python",
+        cmd='run_command("sudo pip3 install opencv-contrib-python==4.5.3.56")')
+    do(msg="install numpy",
+        cmd='run_command("sudo pip3 install -U numpy")')
     do(msg="install google-api",
         cmd='run_command("sudo pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib oauth2client")')
-    
+
+    raspbain_version = check_raspbain_version()
+    if raspbain_version == "10":
+        do(msg="install libopenexr23",
+            cmd='run_command("sudo apt-get install libopenexr23 -y")')     
+    elif raspbain_version == "11":
+        do(msg="install libopenexr25",
+            cmd='run_command("sudo apt-get install libopenexr25 -y")') 
+
 
     print("Setup interfaces")
     do(msg="turn on I2C",
@@ -247,7 +284,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version="0.0.1",
+    version="0.0.2",
 
     description='rascam for Raspberry Pi',
     long_description=long_description,
