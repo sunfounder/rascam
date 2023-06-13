@@ -1,5 +1,100 @@
 # Always prefer setuptools over distutils
-# from setuptools import setup, find_packages
+Domain Name
+TRACES.COM
+Registry Domain ID
+26709_DOMAIN_COM-VRSN
+Registrar WHOIS Server
+whois.networksolutions.com
+Registrar URL
+http://networksolutions.com
+Updated Date
+2022-05-28T17:55:09Z
+Creation Date
+1996-05-29T04:00:00Z
+Registrar Registration Expiration Date
+2032-05-28T04:00:00Z
+Registrar
+Network Solutions, LLC
+Registrar IANA ID
+2
+Reseller
+Domain Status
+clientTransferProhibited https://icann.org/epp#clientTransferProhibited
+Registry Registrant ID
+Registrant Name
+PERFECT PRIVACY, LLC
+Registrant Organization
+Registrant Street
+5335 Gate Parkway care of Network Solutions PO Box 459
+Registrant City
+Jacksonville
+Registrant State/Province
+FL
+Registrant Postal Code
+32256
+Registrant Country
+US
+Registrant Phone
++1.5707088622
+Registrant Phone Ext
+Registrant Fax
+Registrant Fax Ext
+Registrant Email
+hw7fr4qh2sy@networksolutionsprivateregistration.com
+Registry Admin ID
+Admin Name
+PERFECT PRIVACY, LLC
+Admin Organization
+Admin Street
+5335 Gate Parkway care of Network Solutions PO Box 459
+Admin City
+Jacksonville
+Admin State/Province
+FL
+Admin Postal Code
+32256
+Admin Country
+US
+Admin Phone
++1.5707088622
+Admin Phone Ext
+Admin Fax
+Admin Fax Ext
+Admin Email
+hw7fr4qh2sy@networksolutionsprivateregistration.com
+Registry Tech ID
+Tech Name
+PERFECT PRIVACY, LLC
+Tech Organization
+Tech Street
+5335 Gate Parkway care of Network Solutions PO Box 459
+Tech City
+Jacksonville
+Tech State/Province
+FL
+Tech Postal Code
+32256
+Tech Country
+US
+Tech Phone
++1.5707088622
+Tech Phone Ext
+Tech Fax
+Tech Fax Ext
+Tech Email
+dc78b67b8kb@networksolutionsprivateregistration.com
+Name Server
+NS.EXECULINK.COM
+Name Server
+NS-BMI.EXECULINK.COM
+DNSSEC
+unsigned
+Registrar Abuse Contact Email
+domain.operations@web.com
+Registrar Abuse Contact Phone
++1.8777228662
+URL of the ICANN WHOIS Data Problem Reporting System
+http://wdprs.internic.net/ from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
 from os import path, system, listdir
