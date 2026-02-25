@@ -1,5 +1,5 @@
 # from ezblock.basic import _Basic_class
-from smbus import SMBus
+from smbus2 import SMBus
 
 class I2C():
     MASTER = 0

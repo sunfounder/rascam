@@ -1,11 +1,9 @@
 import numpy as np
 import cv2
-import threading
 import RPi.GPIO as GPIO
 import time
 
 rst = 5
-# GPIO.cleanup()
 GPIO.setwarnings(False)
 def reset_mcu():
     GPIO.setmode(GPIO.BCM)
@@ -15,32 +13,20 @@ def reset_mcu():
     GPIO.output(rst, 1)
     time.sleep(0.1)
 reset_mcu()
-# time.sleep(0.5)
 
 import os
-from multiprocessing import Process, Manager
+from multiprocessing import Manager
 
-# from utils import cpu_temperature
-# import imutils
-import sys
 import cv2
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+from picamera2 import Picamera2
 from PIL import Image, ImageDraw, ImageFont
 import rascam.tft_screen as ST7789
-# import ST7789
 from rascam.pwm import PWM
 
-# import time
 import numpy as np
-from rascam.pin import Pin
 import datetime 
-# from flask import Flask, render_template, Response
-
-
 
 from rascam.sh3001 import Sh3001
-# import time
 from math import asin
 import math
 from rascam.adc import ADC
@@ -58,28 +44,32 @@ company_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light
 
 
 def add_text_to_image(name, text_1, text_2):
-    # rgba_image = image.convert('RGB')
-    # text_overlay = Image.new('RGB', rgba_image.size, (255, 255, 255))
     image_target = Image.open(name)
 
     image_draw = ImageDraw.Draw(image_target)
 
     
     time_text = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    time_size_x, time_size_y = image_draw.textsize(time_text, font=time_font(image_target.size[0]))
-    text_size_x, text_size_y = image_draw.textsize(text_1, font=text_font(image_target.size[0]))
+    # 使用新的 Pillow API 替代废弃的 textsize
+    time_font_obj = time_font(image_target.size[0])
+    text_font_obj = text_font(image_target.size[0])
+    # 获取文本尺寸
+    time_bbox = image_draw.textbbox((0, 0), time_text, font=time_font_obj)
+    text_bbox = image_draw.textbbox((0, 0), text_1, font=text_font_obj)
+    time_size_x = time_bbox[2] - time_bbox[0]
+    time_size_y = time_bbox[3] - time_bbox[1]
+    text_size_x = text_bbox[2] - text_bbox[0]
+    text_size_y = text_bbox[3] - text_bbox[1]
 
   # 设置文本文字位置
-    # print(rgba_image)
     time_xy = (image_target.size[0] - time_size_x - time_size_y, image_target.size[1] - int(1.5*time_size_y))
     text_xy = (text_size_y, image_target.size[1] - int(1.5*text_size_y))
     company_xy = (text_size_y, image_target.size[1] - int(1.5*text_size_y) - text_size_y)
 
   # 设置文本颜色和透明度
-    image_draw.text(time_xy, time_text, font=time_font(image_target.size[0]), fill=(255, 255, 255))
-    image_draw.text(company_xy, text_1, font=text_font(image_target.size[0]), fill=(255, 255, 255))
+    image_draw.text(time_xy, time_text, font=time_font_obj, fill=(255, 255, 255))
+    image_draw.text(company_xy, text_1, font=text_font_obj, fill=(255, 255, 255))
     image_draw.text(text_xy, text_2, font=company_font(image_target.size[0]), fill=(255, 255, 255))
-    # run_command("sudo rm " + str(name))
     image_target.save(name,quality=95,subsampling=0)# 
 
 
@@ -92,10 +82,6 @@ def run_command(cmd):
     status = p.poll()
     return status, result
 
-# def get_ip():
-#     _, result = run_command("sudo hostname -I")
-#     ip = result.split(" ")
-#     return ip[0]
 def getIP(ifaces=['wlan0', 'eth0']):
     if isinstance(ifaces, str):
         ifaces = [ifaces]
@@ -114,7 +100,6 @@ def calibrate_imu_acc():
 
 def power_val():
     return round(power_pin_adc.read() / 4096.0 * 3.3 * 2,2)
-
 
 def imu_rotate():
     acc_list = sensor.sh3001_getimudata('acc','xyz')
@@ -265,7 +250,6 @@ GPIO.add_event_detect(26, GPIO.FALLING, callback=button_right, bouncetime=200)
 GPIO.add_event_detect(12, GPIO.FALLING, callback=button_press, bouncetime=200)
 GPIO.add_event_detect(24, GPIO.FALLING, callback=shuttle_press, bouncetime=200)
 GPIO.add_event_detect(6, GPIO.FALLING, callback=power_press, bouncetime=200)
-
 
 screen_bright_control = PWM("P9")
 screen_bright_control.pulse_width_percent(50)
@@ -570,25 +554,14 @@ class Ras_Cam():
     @staticmethod
     def camera():
         global effect
-        camera = PiCamera()
-        camera.resolution = (640, 480)
-        camera.shutter_speed = 0
-        camera.framerate = 20
-        camera.rotation = 0
-    
-        camera.brightness = 50    #(0 to 100)
-        camera.sharpness = 0      #(-100 to 100)
-        camera.contrast = 0       #(-100 to 100)
-        camera.saturation = 0     #(-100 to 100)
-        camera.iso = 0            #(automatic)(100 to 800)
-        camera.exposure_compensation = 0   #(-25 to 25)
-        camera.exposure_mode = 'auto'
-        camera.meter_mode = 'average'
-        camera.awb_mode = 'auto'
-        camera.hflip = False
-        camera.vflip = False
-        camera.crop = (0.0, 0.0, 1.0, 1.0)
-        rawCapture = PiRGBArray(camera, size=camera.resolution)  
+        camera = Picamera2()
+        
+        # 配置预览
+        preview_config = camera.create_preview_configuration(
+            main={"size": (640, 480), "format": "RGB888"}
+        )
+        camera.configure(preview_config)
+        
         last_e ='none'
         camera_val = 0
 
@@ -610,17 +583,19 @@ class Ras_Cam():
         thickness = 1 
         lineType = 8
         try:
+            camera.start()
+            # 外层循环，拍照完成后继续预览
             while True:
-                for frame in camera.capture_continuous(rawCapture, format="rgb",use_video_port=True):# use_video_port=True
-                    img = frame.array
+                # 预览循环
+                while Ras_Cam.detect_obj_parameter['photo_button_flag'] == False:
+                    # 获取帧，picamera2 是 RGB，OpenCV 需要 BGR
+                    img = camera.capture_array()
+                    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
                     img = cv2.resize(img, (320,240), interpolation=cv2.INTER_AREA)
 
                     img2gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                     Ras_Cam.detect_obj_parameter['clarity_val'] = round(cv2.Laplacian(img2gray, cv2.CV_64F).var(),2)
                     img = Ras_Cam.human_detect_func(img)
-                    # cv2.rectangle(img, (280,10), (310,20), (255,255,255))
-                    # cv2.rectangle(img, (310,13), (311,17), (255,255,255))
-                    # cv2.rectangle(img, (282,12), (int((1-round(4.3 - power_val(),3)) / 1 * 26 + 282),18), (0,255,0),thickness=-1)
 
                     if Ras_Cam.detect_obj_parameter['horizontal_line'] == True:
                         cv2.line(img, ptStart_1, ptEnd_1, point_color, thickness, lineType)
@@ -628,36 +603,14 @@ class Ras_Cam():
                         cv2.line(img, ptStart_3, ptEnd_3, point_color, thickness, lineType)
                         cv2.line(img, ptStart_4, ptEnd_4, point_color, thickness, lineType)
                     
-                    # change_camera_setting
+                    # change_camera_setting - 简化处理，picamera2 使用不同方式
                     if Ras_Cam.detect_obj_parameter['change_setting_flag'] == True:
-                        
-
-                        # change_setting_cmd = "camera." + Ras_Cam.detect_obj_parameter['change_setting_type'] + '=' + str(Ras_Cam.detect_obj_parameter['change_setting_val'])
-
-                        # change_type_dict[Ras_Cam.detect_obj_parameter['change_setting_type']] = Ras_Cam.detect_obj_parameter['change_setting_val']
-                        # change_type_val.append(change_setting_cmd)
-                        #
-                        
                         change_val = Ras_Cam.detect_obj_parameter['change_setting_val']
                         change_type_name = Ras_Cam.detect_obj_parameter['change_setting_type']
-                        if type(change_val) == str:
-                            change_val = "\"" + str(Ras_Cam.detect_obj_parameter['change_setting_val']) + "\""
-                            change_setting_cmd = "camera." + change_type_name + '=' +  change_val
-                            # change_setting_cmd = "camera." + change_type_name + '=' + str(Ras_Cam.detect_obj_parameter['change_setting_val'])
-                            # print(change_setting_cmd)
-                            exec(change_setting_cmd)
-                            # change_type_dict[change_type_name] = change_val.replace("'","")
-                            change_type_dict[change_type_name] = change_val.replace("\"","")
-                        else:
-                            change_setting_cmd = "camera." + change_type_name + '=' + str(Ras_Cam.detect_obj_parameter['change_setting_val'])
-                            # print(change_setting_cmd)
-                            exec(change_setting_cmd)
-                            change_type_dict[change_type_name] = Ras_Cam.detect_obj_parameter['change_setting_val']
+                        change_type_dict[change_type_name] = change_val
                         Ras_Cam.detect_obj_parameter['change_setting_flag'] = False
-                        # print(type(Ras_Cam.detect_obj_parameter['change_setting_val']))
-                        # print(Ras_Cam.detect_obj_parameter['change_setting_val'])
+                    
                     if Ras_Cam.detect_obj_parameter['content_num'] != 0:
-
                         for i in range(Ras_Cam.detect_obj_parameter['content_num']):
                             exec("Ras_Cam.detect_obj_parameter['process_si'] = Ras_Cam.detect_obj_parameter['process_content_" + str(i+1) + "'" + "]")
                             cv2.putText(img, str(Ras_Cam.detect_obj_parameter['process_si'][0]),Ras_Cam.detect_obj_parameter['process_si'][1],cv2.FONT_HERSHEY_SIMPLEX,Ras_Cam.detect_obj_parameter['process_si'][3],Ras_Cam.detect_obj_parameter['process_si'][2],2)
@@ -666,126 +619,61 @@ class Ras_Cam():
                         setting_type = Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']]
                         if setting_type == "resolution":
                             Ras_Cam.detect_obj_parameter['setting_val'] = Ras_Cam.detect_obj_parameter['setting_resolution']
-                            # print(Ras_Cam.detect_obj_parameter['change_setting_type'])
-                            # print(list(Ras_Cam.detect_obj_parameter['setting_resolution']))
                             change_type_dict["resolution"] = list(Ras_Cam.detect_obj_parameter['setting_resolution'])
                             cv2.putText(img, 'resolution:' + str(Ras_Cam.detect_obj_parameter['setting_resolution']),(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,255,255),2)
-                        # elif setting_type == "shutter_speed":  
-                        #     change_type_dict["shutter_speed"] = change_type_dict["shutter_speed"]
-                        #     cv2.putText(img, 'shutter_speed:' + str(Ras_Cam.detect_obj_parameter['change_setting_val']),(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,255,255),2)
                         else:
-                            cmd_text = "Ras_Cam.detect_obj_parameter['setting_val'] = camera." + Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']]
-                            # print('mennu:',Ras_Cam.detect_obj_parameter['setting_val'])
-                            # print("test: ",Ras_Cam_SETTING[Ras_Cam.detect_obj_parameter['setting']])
-                            exec(cmd_text)
+                            Ras_Cam.detect_obj_parameter['setting_val'] = change_type_dict.get(setting_type, 0)
                             cv2.putText(img, setting_type + ': ' + str(Ras_Cam.detect_obj_parameter['setting_val']),(10,20),cv2.FONT_HERSHEY_SIMPLEX,0.6,(255,255,255),2)
 
-
-
-
                     e = EFFECTS[Ras_Cam.detect_obj_parameter['eff']]
-                    # change_type_dict['ifx'] = EFFECTS[Ras_Cam.detect_obj_parameter['eff']]
-                    
-                    
-                    if last_e != e:
-                        camera.image_effect = e
                     last_e = e
                     if last_e != 'none':
                         cv2.putText(img, str(last_e),(0,15),cv2.FONT_HERSHEY_SIMPLEX,0.6,(204,209,72),2)
 
-                        
-                    if Ras_Cam.detect_obj_parameter['photo_button_flag'] == True:
-                        camera.close()
-                        break
-
-    # def time_lapse_photography(flag):
-    #     Ras_Cam.detect_obj_parameter['time_lapse_photography'] = flag
-
                     if Ras_Cam.detect_obj_parameter['time_lapse_photography'] == True:
-                        camera.close()
-                        # while True:
-                        #     pass
-                            
-    
+                        camera.stop()
+                    
                     Ras_Cam.img_array[0] = img
-                    rawCapture.truncate(0)
-                    # print("FPS:",round(time.time() - s_time,2),camera.framerate)
 
-
-                # camera = PiCamera()
+                # 拍照逻辑
+                camera.stop()
                 imu_x,imu_y = imu_rotate()
-                # print("change_type_val:",change_type_val)
-                for i in change_type_val:
-                    exec(i)
                 if imu_y < 35 and imu_y >-35 and imu_x <= 90 and imu_x > 45:
-                    # if Ras_Cam.detect_obj_parameter['setting_resolution'][0] < 3040:
-                    #     camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
-                    # else:
-                    # camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
-                    # camera.rotation = 270
                     change_type_dict['rotation'] = 270
                     image_width, image_height = change_type_dict['resolution'][1],change_type_dict['resolution'][0]
                 elif imu_y < 35 and imu_y >-35 and imu_x < -45 and imu_x >= -90:
-                    # if Ras_Cam.detect_obj_parameter['setting_resolution'][0] < 3040:
-                    #     camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
-                    # else:
-                    # camera.resolution = (Ras_Cam.detect_obj_parameter['setting_resolution'][1],Ras_Cam.detect_obj_parameter['setting_resolution'][0])
-                    # camera.rotation = 90
                     image_width, image_height  = change_type_dict['resolution'][1],change_type_dict['resolution'][0]
                     change_type_dict['rotation'] = 90
                 elif imu_y < -65 and imu_y >=-90 and imu_x < 45 and imu_x >= -45:
-                    # camera.resolution = Ras_Cam.detect_obj_parameter['setting_resolution']
-                    # camera.rotation = 180
                     image_width, image_height = change_type_dict['resolution'][0],change_type_dict['resolution'][1]
                     change_type_dict['rotation'] = 180
                 else:
                     image_width, image_height = change_type_dict['resolution'][0],change_type_dict['resolution'][1]
                     change_type_dict['rotation'] = 0
-                    # camera.resolution = Ras_Cam.detect_obj_parameter['setting_resolution']
 
-                # camera.image_effect = e
-                # rawCapture = PiRGBArray(camera, size=camera.resolution) 
                 picture_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
                 Ras_Cam.detect_obj_parameter['picture_path'] = '/home/pi/Pictures/rascam_picture_file/' + picture_time + '.jpg'
-                # print(Ras_Cam.detect_obj_parameter['picture_path']) 
-
-
-                # camera.close() 
-                # print(camera.brightness,camera.sharpness,camera.contrast,camera.saturation,camera.iso,camera.exposure_compensation,camera.exposure_mode,camera.meter_mode,camera.awb_mode,camera.shutter_speed)
-                a_t = "sudo raspistill" +  " -t 250"  + " -w " + str(image_width) + " -h " + str(image_height) + " -br " + str(change_type_dict['brightness']) + " -co " + str(change_type_dict['contrast']) \
-                + " -sh " + str(change_type_dict['sharpness']) + " -sa " + str(change_type_dict['saturation']) + " -ISO " + str(change_type_dict['iso']) + " -ev " + str(change_type_dict['exposure_compensation']) + " -ex " + str(change_type_dict['exposure_mode']) + " -mm " + str(change_type_dict['meter_mode']) \
-                + " -rot " + str(change_type_dict['rotation']) +" -ifx " + str(EFFECTS[Ras_Cam.detect_obj_parameter['eff']]) + " -awb " + str(change_type_dict['awb_mode']) + " -drc " + str(change_type_dict['drc_strength']) + " -o " + Ras_Cam.detect_obj_parameter['picture_path']
-
-                # a_t = "sudo raspistill" +  " -t 250"  +  " -ss " + "0" + " -o " + Ras_Cam.detect_obj_parameter['picture_path']
-                run_command(a_t)
-                # camera.capture(Ras_Cam.detect_obj_parameter['picture_path'])
-                # cv2.imread()
+                
+                # 使用 picamera2 拍照
+                still_config = camera.create_still_configuration(
+                    main={"size": (image_width, image_height)}
+                )
+                camera.configure(still_config)
+                camera.start()
+                camera.capture_file(Ras_Cam.detect_obj_parameter['picture_path'])
+                camera.stop()
+                
                 if Ras_Cam.detect_obj_parameter['watermark_flag'] == True:
                     add_text_to_image(Ras_Cam.detect_obj_parameter['picture_path'],'Shot by Rascam','Sunfounder')
 
                 if Ras_Cam.detect_obj_parameter['google_upload_flag'] == True:
                     upload(file_path='/home/pi/Pictures/rascam_picture_file/', file_name=picture_time + '.jpg')
 
-                #init again
-                # camera.close()
-                camera = PiCamera()
-                for i in change_type_dict.items():
-                    if type(i[1]) != str:
-                        change_setting_cmd = "camera." + i[0] + '=' + str(i[1])
-                        # print(change_setting_cmd)
-                        # exec(change_setting_cmd)
-                    else:
-                        change_setting_cmd = "camera." + i[0] + '=' + "'" + str(i[1]) + "'"
-                        # print(change_setting_cmd)
-                        # exec(change_setting_cmd)                        
-                camera.resolution = (640,480)
-                camera.shutter_speed = 0
-                camera.framerate = 20
-                camera.rotation = 0
-                camera.image_effect = e
-                rawCapture = PiRGBArray(camera, size=camera.resolution) 
+                # 重新配置为预览模式
+                camera.configure(preview_config)
+                camera.start()
                 Ras_Cam.detect_obj_parameter['photo_button_flag'] = False
-                   
+               
         finally:
             camera.close()
 
