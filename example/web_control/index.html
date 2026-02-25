@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RasCam Control Center</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; }
+        .container { max-width: 640px; width: 100%; text-align: center; }
+        
+        /* Media Viewer Styling */
+        .viewer-box { width: 100%; min-height: 480px; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
+        .viewer-box img { width: 100%; height: auto; display: block; }
+        
+        /* Status Text */
+        #status-label { margin: 15px 0; font-size: 14px; color: #aaa; font-style: italic; }
+
+        /* Button Styling */
+        .btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
+        button { padding: 12px 30px; border: none; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; outline: none; }
+        
+        /* Shutter Button */
+        .btn-snap { background: #ff4757; color: white; width: 80px; height: 80px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4); }
+        .btn-snap:active { transform: scale(0.9); }
+        
+        /* Action Buttons */
+        .btn-share { background: #2ed573; color: white; }
+        .btn-back { background: #5352ed; color: white; }
+        button:disabled { background: #555; cursor: not-allowed; opacity: 0.6; }
+
+        /* UI State Management */
+        #result-view { display: none; }
+        #post-controls { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>RasCam Live Control</h2>
+    
+    <div class="viewer-box">
+        <img id="live-stream" src="/video_feed" alt="Live Stream">
+        <img id="result-view" src="" alt="Captured Image preview">
+    </div>
+
+    <p id="status-label">System Ready</p>
+
+    <div id="pre-controls" class="btn-group">
+        <button class="btn-snap" onclick="takePhoto()" title="Take Photo"></button>
+    </div>
+
+    <div id="post-controls" class="btn-group">
+        <button class="btn-share" id="share-btn" onclick="sharePhoto()">Upload to Google</button>
+        <button class="btn-back" onclick="goBack()">Back to Live</button>
+    </div>
+</div>
+
+<script>
+    const liveStream = document.getElementById('live-stream');
+    const resultView = document.getElementById('result-view');
+    const statusLabel = document.getElementById('status-label');
+    const preControls = document.getElementById('pre-controls');
+    const postControls = document.getElementById('post-controls');
+    const shareBtn = document.getElementById('share-btn');
+
+    /**
+     * Triggers the camera snapshot on the backend
+     */
+    function takePhoto() {
+        statusLabel.innerText = "Capturing...";
+        fetch('/take_picture')
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'ok') {
+                    // Switch visibility to show static capture
+                    liveStream.style.display = 'none';
+                    resultView.style.display = 'block';
+                    resultView.src = data.url; 
+                    
+                    // Switch button groups
+                    preControls.style.display = 'none';
+                    postControls.style.display = 'flex';
+                    statusLabel.innerText = "Capture successful! Share or return to live view.";
+                }
+            })
+            .catch(err => {
+                statusLabel.innerText = "Error: " + err;
+            });
+    }
+
+    /**
+     * Initiates the Google Drive upload process
+     */
+    function sharePhoto() {
+        statusLabel.innerText = "Uploading to Google Drive...";
+        shareBtn.disabled = true;
+        
+        fetch('/share')
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    alert("Upload successful!");
+                    statusLabel.innerText = "Shared successfully.";
+                    goBack(); 
+                } else {
+                    alert("Upload failed. Please check system logs.");
+                    statusLabel.innerText = "Upload failed.";
+                }
+            })
+            .finally(() => {
+                shareBtn.disabled = false;
+            });
+    }
+
+    /**
+     * Restores the real-time stream view
+     */
+    function goBack() {
+        liveStream.style.display = 'block';
+        resultView.style.display = 'none';
+        preControls.style.display = 'flex';
+        postControls.style.display = 'none';
+        statusLabel.innerText = "Streaming Live";
+    }
+</script>
+
+</body>
+</html>
