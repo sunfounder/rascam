@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools >= 61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rascam"
+version = "0.0.3"
+authors = [
+  { name="sunfounder", email="service@sunfounder.com" },
+]
+description = "Raspberry Pi Camera Python library"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: POSIX :: Linux",
+]
+keywords = ["rascam", "sunfounder"]
+
+dependencies = [
+  "rpi.lgpio",
+  "httplib2",
+  "oauth2client",
+  "pillow",
+  "smbus2",
+  "Adafruit_GPIO",
+  "websockets",
+  "numpy",
+  "google-api-python-client",
+  "google-auth-httplib2",
+  "google-auth-oauthlib",
+]
+
+[project.urls]
+Repository = "https://github.com/sunfounder/rascam/"
+Issues = "https://github.com/sunfounder/rascam/issues"
+
+[tool.setuptools.packages.find]
+include = ["rascam*"]
+
