@@ -31,6 +31,9 @@ from math import asin
 import math
 from rascam.adc import ADC
 from rascam.google_upload import upload
+from rascam.utils import get_username
+
+USERNAME = get_username()
 
 import re
 
@@ -38,9 +41,9 @@ sensor = Sh3001()
 power_pin_adc = ADC("A2")
 
 
-time_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 6))
-text_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 10))
-company_font = lambda x: ImageFont.truetype('/home/pi/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 8))
+time_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 6))
+text_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 10))
+company_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 8))
 
 
 def add_text_to_image(name, text_1, text_2):
@@ -324,7 +327,7 @@ HEIGHT = disp.height
 disp.begin()
 
 
-# picture_1 = cv2.imread('/home/pi/rascam/rascam/sunfounder.jpg')
+# picture_1 = cv2.imread(f'/home/{USERNAME}/rascam/rascam/sunfounder.jpg')
 # picture_1 = picture_1[...,[2,1,0]]
 # disp.display(picture_1)
 # time.sleep(1)
@@ -354,7 +357,7 @@ class Ras_Cam():
 
 #video
     # detect_obj_parameter['vi_fps'] = 20
-    face_cascade = cv2.CascadeClassifier('/home/pi/rascam/example/haarcascade_frontalface_default.xml') 
+    face_cascade = cv2.CascadeClassifier(f'/home/{USERNAME}/rascam/example/haarcascade_frontalface_default.xml') 
 
     detect_obj_parameter['ensure_flag'] = False
     detect_obj_parameter['clarity_val'] = 0
@@ -652,7 +655,7 @@ class Ras_Cam():
                     change_type_dict['rotation'] = 0
 
                 picture_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-                Ras_Cam.detect_obj_parameter['picture_path'] = '/home/pi/Pictures/rascam_picture_file/' + picture_time + '.jpg'
+                Ras_Cam.detect_obj_parameter['picture_path'] = f'/home/{USERNAME}/Pictures/rascam_picture_file/' + picture_time + '.jpg'
                 
                 # 使用 picamera2 拍照
                 still_config = camera.create_still_configuration(
@@ -667,7 +670,7 @@ class Ras_Cam():
                     add_text_to_image(Ras_Cam.detect_obj_parameter['picture_path'],'Shot by Rascam','Sunfounder')
 
                 if Ras_Cam.detect_obj_parameter['google_upload_flag'] == True:
-                    upload(file_path='/home/pi/Pictures/rascam_picture_file/', file_name=picture_time + '.jpg')
+                    upload(file_path=f'/home/{USERNAME}/Pictures/rascam_picture_file/', file_name=picture_time + '.jpg')
 
                 # 重新配置为预览模式
                 camera.configure(preview_config)

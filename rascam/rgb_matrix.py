@@ -2,6 +2,9 @@ import time
 from rascam.i2c import I2C
 from rascam.color import Color
 # from sensor_hat.rgb_font import Alphabet, Icons
+from rascam.utils import get_username
+
+USERNAME = get_username()
 
 from PIL import Image
 from PIL import ImageDraw
@@ -105,7 +108,7 @@ class RGB_Matrix():
         self.flag = True
         self.new_image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.new_image)
-        self.font = ImageFont.truetype('/home/pi/rascam/rascam/Minecraftia-Regular.ttf', 8)
+        self.font = ImageFont.truetype(f'/home/{USERNAME}/rascam/rascam/Minecraftia-Regular.ttf', 8)
 
         self.bus = I2C()
         self.addr = addr

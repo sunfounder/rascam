@@ -1,11 +1,13 @@
 from __future__ import print_function
 import os
-import io
 import time
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from httplib2 import Http
 from oauth2client import file, client, tools
+from rascam.utils import get_username
+
+USERNAME = get_username()
 
 # 权限必需
 SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -134,7 +136,7 @@ def upload(file_path=None, file_name=None, update_drive_service_folder_name=None
 
     store = file.Storage('token.json')
     creds = store.get()
-    os.chdir('/home/pi/rascam/rascam')
+    os.chdir(f'/home/{USERNAME}/rascam/rascam')
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
@@ -159,4 +161,4 @@ def upload(file_path=None, file_name=None, update_drive_service_folder_name=None
 
 if __name__ == '__main__':
 
-    upload(file_path='/home/pi/picture_file', file_name='001.jpg')
+    upload(file_path=f'/home/{USERNAME}/picture_file', file_name='001.jpg')

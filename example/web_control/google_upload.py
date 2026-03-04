@@ -1,13 +1,14 @@
 from __future__ import print_function
-import os
-import io
 import time
 from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from googleapiclient.http import MediaFileUpload
 from httplib2 import Http
 from oauth2client import file, client, tools
 import signal
 import time
+from rascam.utils import get_username
+
+USERNAME = get_username()
 
 # 权限必需
 SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -187,5 +188,5 @@ def upload(file_path=None, file_name=None, update_drive_service_folder_name=None
 
 if __name__ == '__main__':
 
-    name = upload(file_path='/home/pi/picture_file', file_name='20200611-040043.jpg')
+    name = upload(file_path=f'/home/{USERNAME}/picture_file', file_name='20200611-040043.jpg')
     print(name)

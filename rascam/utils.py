@@ -50,23 +50,27 @@ def is_installed(cmd):
     else:
         return False
 
+def get_username():
+    return os.popen('echo ${SUDO_USER:-$LOGNAME}').readline().strip()
+
 def ezblock_update():
-    files = os.listdir("/home/pi/")
+    username = get_username()
+    files = os.listdir(f"/home/{username}/")
     if "ezb-pi" in files:
-        os.chdir("/home/pi/ezb-pi")
+        os.chdir(f"/home/{username}/ezb-pi")
         status, error = run_command("git pull origin master")
         if status == 0:
             return True
         else:
             return error
     else:
-        os.chdir("/home/pi")
+        os.chdir(f"/home/{username}/")
         status, error = run_command("git clone https://github.com/ezblockcode/ezb-pi.git")
         if status == 0:
             return True
         else:
             return error
-        os.chdir("/home/pi/ezb-pi")
+        os.chdir(f"/home/{username}/ezb-pi")
     status, error = run_command("sudo python3 install.py")
     if status == 0:
         return True

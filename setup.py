@@ -19,7 +19,6 @@ APT_DEPENDENCIES = [
     "i2c-tools",
     "python3-picamera2",
     "python3-opencv",
-    "lgpio",
 ]
 
 # define color print

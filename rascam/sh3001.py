@@ -1,11 +1,12 @@
 import time
-import math
 from rascam.i2c import I2C
 import sys
 import tty
 import termios
-import asyncio
 from rascam.filedb import FileDB
+from rascam.utils import get_username
+
+USERNAME = get_username()
 
 
 def readchar():
@@ -413,7 +414,7 @@ class Sh3001(I2C):
     def __init__(self):
         super().__init__()
         # self.6d_data_buf = bytearray([0,0,0,0,0,0])
-        db = '/home/pi/.rascam_config'
+        db = f'/home/{USERNAME}/.rascam_config'
         self.reg_status = bytearray([0])
         self.sh3001_init()
         # self.acc_cal = [-288.0, 141.5, 31.5]
