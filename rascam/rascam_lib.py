@@ -41,9 +41,9 @@ sensor = Sh3001()
 power_pin_adc = ADC("A2")
 
 
-time_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 6))
-text_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 10))
-company_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 8))
+time_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 6))
+text_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 10))
+company_font = lambda x: ImageFont.truetype(f'/home/{USERNAME}/rascam/rascam/Roboto-Light-2.ttf', int(x / 320.0 * 8))
 
 
 def add_text_to_image(name, text_1, text_2):
